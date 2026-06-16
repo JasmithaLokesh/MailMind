@@ -8,14 +8,19 @@ from sqlalchemy.orm import Session
 
 from app.schemas.user import (
     UserCreate,
-    UserResponse
+    UserResponse,
+    UserLogin,
+    UserUpdate
 )
 
 from app.models.user import User
 
 from app.core.database import get_db
 
-from app.core.security import hash_password
+from app.core.security import (
+    hash_password,
+    verify_password
+)
 
 router = APIRouter()
 
@@ -62,3 +67,91 @@ def signup(
     db.refresh(new_user)
 
     return new_user
+
+@router.post("/login")
+def login(
+    credentials: UserLogin,
+    db: Session = Depends(get_db)
+):
+    user = (
+        db.query(User)
+        .filter(
+            User.email == credentials.email
+        )
+        .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    if not verify_password(
+        credentials.password,
+        user.password_hash
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid email or password"
+        )
+
+    return {
+        "message": "Login successful",
+        "user_id": user.id,
+        "email": user.email
+    }
+
+@router.put(
+    "/users/{user_id}",
+    response_model=UserResponse
+)
+def update_user(
+    user_id: int,
+    user_data: UserUpdate,
+    db: Session = Depends(get_db)
+):
+    user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    user.full_name = user_data.full_name
+
+    db.commit()
+
+    db.refresh(user)
+
+    return user
+
+@router.delete("/users/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    db.delete(user)
+
+    db.commit()
+
+    return {
+        "message": f"User {user_id} deleted successfully"
+    }
