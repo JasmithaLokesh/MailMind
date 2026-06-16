@@ -97,10 +97,11 @@ def login(
         )
 
     return {
-        "message": "Login successful",
-        "user_id": user.id,
-        "email": user.email
-    }
+    "message": "Login successful",
+    "user_id": user.id,
+    "email": user.email,
+    "full_name": user.full_name
+}
 
 @router.put(
     "/users/{user_id}",
