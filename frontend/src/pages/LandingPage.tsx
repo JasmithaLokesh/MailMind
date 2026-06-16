@@ -4,174 +4,348 @@ import Logo from "../components/Logo";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <nav className="flex items-center justify-between px-10 py-6">
+
+      {/* Navbar */}
+
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 py-6">
+
         <Logo />
 
         <div className="flex gap-4">
+
           <Link
             to="/login"
-            className="px-5 py-2 border border-slate-700 rounded-lg hover:border-violet-500 transition"
+            className="
+            px-5
+            py-2.5
+            border
+            border-slate-700
+            rounded-xl
+            hover:border-cyan-500
+            transition
+          "
           >
             Login
           </Link>
 
           <Link
             to="/signup"
-            className="px-5 py-2 bg-violet-600 rounded-lg hover:bg-violet-700 transition"
+            className="
+            px-5
+            py-2.5
+            bg-cyan-600
+            rounded-xl
+            hover:bg-cyan-700
+            transition
+          "
           >
             Sign Up
           </Link>
+
         </div>
+
       </nav>
 
-      <section className="flex flex-col items-center justify-center text-center mt-32 px-6">
-        <div className="bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-2 mb-6">
+      {/* Hero */}
+
+      <section
+        className="
+        max-w-7xl
+        mx-auto
+        px-6
+        pt-24
+        pb-32
+        text-center
+      "
+      >
+
+        <div
+          className="
+          inline-block
+          bg-cyan-500/10
+          border
+          border-cyan-500/20
+          rounded-full
+          px-5
+          py-2
+          mb-8
+          text-cyan-300
+        "
+        >
           AI Powered Email Intelligence
         </div>
 
-        <h1 className="text-6xl font-bold max-w-5xl leading-tight">
+        <h1
+          className="
+          text-6xl
+          md:text-7xl
+          font-bold
+          max-w-4xl
+          mx-auto
+          leading-tight
+        "
+        >
           Never Miss Important Emails Again
         </h1>
 
-        <p className="mt-8 text-xl text-slate-400 max-w-3xl">
-          MailMind automatically scans Gmail, Outlook,
-          and Yahoo Mail to detect interviews,
-          internships, deadlines, assignments,
+        <p
+          className="
+          mt-8
+          text-xl
+          text-slate-400
+          max-w-2xl
+          mx-auto
+          leading-relaxed
+        "
+        >
+          MailMind automatically scans Gmail,
+          Outlook and Yahoo Mail to detect
+          interviews, internships, deadlines,
           meetings and important actions.
         </p>
 
-        <div className="flex gap-4 mt-10">
+        <div
+          className="
+          flex
+          justify-center
+          gap-5
+          mt-12
+        "
+        >
+
           <Link
             to="/signup"
-            className="px-8 py-4 bg-violet-600 rounded-xl text-lg font-semibold hover:bg-violet-700 transition"
+            className="
+            px-8
+            py-4
+            bg-cyan-600
+            rounded-xl
+            text-lg
+            font-semibold
+            hover:bg-cyan-700
+            transition
+          "
           >
             Get Started
           </Link>
 
-          <a href="#features" className="px-8 py-4 border border-slate-700 rounded-xl text-lg hover:border-violet-500 transition">
+          <a
+            href="#features"
+            className="
+            px-8
+            py-4
+            border
+            border-slate-700
+            rounded-xl
+            text-lg
+            hover:border-cyan-500
+            transition
+          "
+          >
             Learn More
           </a>
+
         </div>
+
       </section>
 
+      {/* Features */}
+
       <section
-  id="features"
-  className="py-32 px-10 bg-slate-900"
->
-  <h2 className="text-4xl font-bold text-center mb-16">
-    Features
-  </h2>
+        id="features"
+        className="
+        max-w-7xl
+        mx-auto
+        px-6
+        py-28
+      "
+      >
 
-  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <h2 className="text-4xl font-bold text-center mb-16">
+          Features
+        </h2>
 
-    <div className="bg-slate-800 p-6 rounded-2xl">
-      <h3 className="text-xl font-semibold mb-4">
-        Smart Detection
-      </h3>
-      <p className="text-slate-400">
-        Automatically identifies important emails.
-      </p>
-    </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-    <div className="bg-slate-800 p-6 rounded-2xl">
-      <h3 className="text-xl font-semibold mb-4">
-        Deadline Tracking
-      </h3>
-      <p className="text-slate-400">
-        Never miss assignments and deadlines.
-      </p>
-    </div>
+          <div className="bg-slate-900 p-8 rounded-3xl hover:-translate-y-1 transition">
+            <h3 className="text-xl font-semibold mb-4 text-cyan-400">
+              Smart Detection
+            </h3>
 
-    <div className="bg-slate-800 p-6 rounded-2xl">
-      <h3 className="text-xl font-semibold mb-4">
-        Interview Alerts
-      </h3>
-      <p className="text-slate-400">
-        Get notified about interview invitations.
-      </p>
-    </div>
+            <p className="text-slate-400 leading-relaxed">
+              Automatically identifies important emails.
+            </p>
+          </div>
 
-    <div className="bg-slate-800 p-6 rounded-2xl">
-      <h3 className="text-xl font-semibold mb-4">
-        AI Summaries
-      </h3>
-      <p className="text-slate-400">
-        Understand emails instantly with AI.
-      </p>
-    </div>
+          <div className="bg-slate-900 p-8 rounded-3xl hover:-translate-y-1 transition">
+            <h3 className="text-xl font-semibold mb-4 text-cyan-400">
+              Deadline Tracking
+            </h3>
 
-  </div>
-</section>
+            <p className="text-slate-400 leading-relaxed">
+              Never miss assignments and deadlines.
+            </p>
+          </div>
 
-<section className="py-32 px-10">
+          <div className="bg-slate-900 p-8 rounded-3xl hover:-translate-y-1 transition">
+            <h3 className="text-xl font-semibold mb-4 text-cyan-400">
+              Interview Alerts
+            </h3>
 
-  <h2 className="text-4xl font-bold text-center mb-16">
-    How It Works
-  </h2>
+            <p className="text-slate-400 leading-relaxed">
+              Get notified about interview invitations.
+            </p>
+          </div>
 
-  <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+          <div className="bg-slate-900 p-8 rounded-3xl hover:-translate-y-1 transition">
+            <h3 className="text-xl font-semibold mb-4 text-cyan-400">
+              AI Summaries
+            </h3>
 
-    <div className="text-center">
-      <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-        1
-      </div>
+            <p className="text-slate-400 leading-relaxed">
+              Understand emails instantly with AI.
+            </p>
+          </div>
 
-      <h3 className="text-xl font-semibold mb-3">
-        Connect Email
-      </h3>
+        </div>
 
-      <p className="text-slate-400">
-        Connect Gmail, Outlook or Yahoo Mail securely.
-      </p>
-    </div>
+      </section>
 
-    <div className="text-center">
-      <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-        2
-      </div>
+      {/* How It Works */}
 
-      <h3 className="text-xl font-semibold mb-3">
-        AI Analysis
-      </h3>
+      <section
+        className="
+        max-w-7xl
+        mx-auto
+        px-6
+        py-28
+      "
+      >
 
-      <p className="text-slate-400">
-        AI scans emails and extracts important actions.
-      </p>
-    </div>
+        <h2 className="text-4xl font-bold text-center mb-20">
+          How It Works
+        </h2>
 
-    <div className="text-center">
-      <div className="w-16 h-16 bg-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-        3
-      </div>
+        <div className="grid md:grid-cols-3 gap-12">
 
-      <h3 className="text-xl font-semibold mb-3">
-        Smart Dashboard
-      </h3>
+          <div className="text-center">
 
-      <p className="text-slate-400">
-        View deadlines, interviews and tasks in one place.
-      </p>
-    </div>
+            <div
+              className="
+              w-16
+              h-16
+              bg-cyan-600
+              rounded-full
+              flex
+              items-center
+              justify-center
+              mx-auto
+              mb-6
+              text-2xl
+              font-bold
+            "
+            >
+              1
+            </div>
 
-  </div>
+            <h3 className="text-xl font-semibold mb-4">
+              Connect Email
+            </h3>
 
-</section>
+            <p className="text-slate-400 leading-relaxed">
+              Connect Gmail, Outlook or Yahoo Mail securely.
+            </p>
 
-<footer className="border-t border-slate-800 py-10 text-center text-slate-400">
+          </div>
 
-  <h3 className="text-white text-xl font-semibold mb-2">
-    MailMind
-  </h3>
+          <div className="text-center">
 
-  <p>
-    AI Email Copilot
-  </p>
+            <div
+              className="
+              w-16
+              h-16
+              bg-cyan-600
+              rounded-full
+              flex
+              items-center
+              justify-center
+              mx-auto
+              mb-6
+              text-2xl
+              font-bold
+            "
+            >
+              2
+            </div>
 
-  <p className="mt-4 text-sm">
-    © 2025 MailMind. All rights reserved.
-  </p>
+            <h3 className="text-xl font-semibold mb-4">
+              AI Analysis
+            </h3>
 
-</footer>
+            <p className="text-slate-400 leading-relaxed">
+              AI scans emails and extracts important actions.
+            </p>
+
+          </div>
+
+          <div className="text-center">
+
+            <div
+              className="
+              w-16
+              h-16
+              bg-cyan-600
+              rounded-full
+              flex
+              items-center
+              justify-center
+              mx-auto
+              mb-6
+              text-2xl
+              font-bold
+            "
+            >
+              3
+            </div>
+
+            <h3 className="text-xl font-semibold mb-4">
+              Smart Dashboard
+            </h3>
+
+            <p className="text-slate-400 leading-relaxed">
+              View deadlines, interviews and tasks in one place.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* Footer */}
+
+      <footer
+        className="
+        border-t
+        border-slate-800
+        py-12
+        text-center
+        text-slate-400
+        mt-10
+      "
+      >
+
+        <h3 className="text-white text-xl font-semibold mb-2">
+          MailMind
+        </h3>
+
+        <p>AI Email Copilot</p>
+
+        <p className="mt-4 text-sm">
+          © 2025 MailMind. All rights reserved.
+        </p>
+
+      </footer>
 
     </div>
   );

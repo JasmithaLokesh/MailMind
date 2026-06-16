@@ -1,7 +1,16 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 
+import {
+  FaUser,
+  FaSignOutAlt,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaBell
+} from "react-icons/fa";
+
 export default function DashboardPage() {
+
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
   );
@@ -14,16 +23,27 @@ export default function DashboardPage() {
     window.location.href = "/";
   };
 
+  const initials =
+    user?.full_name
+      ?.split(" ")
+      .map((name: string) =>
+        name.charAt(0)
+      )
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "U";
+
   return (
+
     <div className="min-h-screen bg-slate-950 text-white flex">
 
       <Sidebar />
 
-      <main className="flex-1 p-10">
+      <main className="flex-1 p-12">
 
         {/* Header */}
 
-        <div className="flex justify-between items-start mb-10">
+        <div className="flex justify-between items-start mb-12">
 
           <div>
 
@@ -37,7 +57,7 @@ export default function DashboardPage() {
 
           </div>
 
-          {/* Profile Menu */}
+          {/* Avatar */}
 
           <div className="relative">
 
@@ -47,43 +67,126 @@ export default function DashboardPage() {
                   !showProfile
                 )
               }
-              className="bg-slate-900 border border-slate-700 px-5 py-3 rounded-xl hover:border-violet-500 transition"
+              className="
+                h-12
+                w-12
+                rounded-full
+                bg-cyan-600
+                text-white
+                font-bold
+                flex
+                items-center
+                justify-center
+                hover:bg-cyan-700
+                transition
+              "
             >
-              My Profile
+              {initials}
             </button>
 
             {showProfile && (
 
-              <div className="absolute right-0 mt-3 w-72 bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl z-50">
+              <div
+                className="
+                absolute
+                right-0
+                mt-4
+                w-80
+                bg-slate-900
+                border
+                border-slate-700
+                rounded-2xl
+                p-5
+                shadow-xl
+                z-50
+              "
+              >
 
                 <div className="border-b border-slate-700 pb-4 mb-4">
 
-                  <h3 className="font-semibold text-lg">
-                    {user.full_name}
-                  </h3>
+                  <div className="flex items-center gap-3">
 
-                  <p className="text-slate-400 text-sm">
-                    {user.email}
-                  </p>
+                    <div
+                      className="
+                      h-12
+                      w-12
+                      rounded-full
+                      bg-cyan-600
+                      flex
+                      items-center
+                      justify-center
+                      font-bold
+                    "
+                    >
+                      {initials}
+                    </div>
+
+                    <div>
+
+                      <h3 className="font-semibold text-lg">
+                        {user.full_name}
+                      </h3>
+
+                      <p className="text-slate-400 text-sm">
+                        {user.email}
+                      </p>
+
+                    </div>
+
+                  </div>
 
                 </div>
 
                 <button
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-800 transition"
+                  className="
+                  flex
+                  items-center
+                  gap-3
+                  w-full
+                  px-3
+                  py-3
+                  rounded-xl
+                  hover:bg-slate-800
+                  transition
+                "
                 >
+                  <FaUser />
                   Profile
                 </button>
 
                 <button
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-800 transition"
+                  className="
+                  flex
+                  items-center
+                  gap-3
+                  w-full
+                  px-3
+                  py-3
+                  rounded-xl
+                  hover:bg-slate-800
+                  transition
+                "
                 >
-                  Account Settings
+                  <FaEnvelope />
+                  Account Details
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-slate-800 transition"
+                  className="
+                  flex
+                  items-center
+                  gap-3
+                  w-full
+                  px-3
+                  py-3
+                  rounded-xl
+                  text-red-400
+                  hover:bg-slate-800
+                  transition
+                "
                 >
+                  <FaSignOutAlt />
                   Logout
                 </button>
 
@@ -97,36 +200,90 @@ export default function DashboardPage() {
 
         {/* Dashboard Cards */}
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-8">
 
-          <div className="bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold">
-              Important Emails
-            </h2>
+          <div
+            className="
+            bg-slate-900
+            rounded-3xl
+            p-8
+            hover:-translate-y-1
+            transition
+          "
+          >
 
-            <p className="text-4xl font-bold mt-4">
+            <div className="flex items-center justify-between">
+
+              <h2 className="text-xl font-semibold">
+                Important Emails
+              </h2>
+
+              <FaEnvelope
+                className="text-cyan-500"
+              />
+
+            </div>
+
+            <p className="text-5xl font-bold mt-6">
               0
             </p>
+
           </div>
 
-          <div className="bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold">
-              Deadlines
-            </h2>
+          <div
+            className="
+            bg-slate-900
+            rounded-3xl
+            p-8
+            hover:-translate-y-1
+            transition
+          "
+          >
 
-            <p className="text-4xl font-bold mt-4">
+            <div className="flex items-center justify-between">
+
+              <h2 className="text-xl font-semibold">
+                Deadlines
+              </h2>
+
+              <FaCalendarAlt
+                className="text-cyan-500"
+              />
+
+            </div>
+
+            <p className="text-5xl font-bold mt-6">
               0
             </p>
+
           </div>
 
-          <div className="bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold">
-              Interviews
-            </h2>
+          <div
+            className="
+            bg-slate-900
+            rounded-3xl
+            p-8
+            hover:-translate-y-1
+            transition
+          "
+          >
 
-            <p className="text-4xl font-bold mt-4">
+            <div className="flex items-center justify-between">
+
+              <h2 className="text-xl font-semibold">
+                Alerts
+              </h2>
+
+              <FaBell
+                className="text-cyan-500"
+              />
+
+            </div>
+
+            <p className="text-5xl font-bold mt-6">
               0
             </p>
+
           </div>
 
         </div>
@@ -134,5 +291,6 @@ export default function DashboardPage() {
       </main>
 
     </div>
+
   );
 }

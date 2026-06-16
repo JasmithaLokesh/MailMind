@@ -83,12 +83,6 @@ export default function SignupPage() {
         "Signup successful!"
       );
 
-      // Clear form after success
-      setFullName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-
     } catch (error: any) {
 
       setMessage(
@@ -116,21 +110,6 @@ export default function SignupPage() {
 
         </div>
 
-        <div className="grid grid-cols-2 mb-8 rounded-xl overflow-hidden">
-
-          <Link
-            to="/login"
-            className="bg-slate-800 text-white py-3 text-center hover:bg-slate-700 transition"
-          >
-            Sign In
-          </Link>
-
-          <div className="bg-violet-600 text-white py-3 text-center font-semibold">
-            Sign Up
-          </div>
-
-        </div>
-
         <form
           onSubmit={handleSignup}
           className="space-y-5"
@@ -145,7 +124,7 @@ export default function SignupPage() {
                 e.target.value
               )
             }
-            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white placeholder:text-slate-500 focus:border-violet-500 outline-none"
+            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white focus:border-violet-500 outline-none"
             required
           />
 
@@ -158,7 +137,7 @@ export default function SignupPage() {
                 e.target.value
               )
             }
-            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white placeholder:text-slate-500 focus:border-violet-500 outline-none"
+            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white focus:border-violet-500 outline-none"
             required
           />
 
@@ -181,7 +160,7 @@ export default function SignupPage() {
                     e.target.value
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white placeholder:text-slate-500 focus:border-violet-500 outline-none"
+                className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white focus:border-violet-500 outline-none"
                 required
               />
 
@@ -207,7 +186,10 @@ export default function SignupPage() {
                 className={`mt-2 text-sm ${getPasswordStrength().color}`}
               >
                 Password Strength:{" "}
-                {getPasswordStrength().text}
+                {
+                  getPasswordStrength()
+                    .text
+                }
               </p>
 
             )}
@@ -227,13 +209,15 @@ export default function SignupPage() {
                     : "password"
                 }
                 placeholder="Confirm Password"
-                value={confirmPassword}
+                value={
+                  confirmPassword
+                }
                 onChange={(e) =>
                   setConfirmPassword(
                     e.target.value
                   )
                 }
-                className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white placeholder:text-slate-500 focus:border-violet-500 outline-none"
+                className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white focus:border-violet-500 outline-none"
                 required
               />
 
@@ -298,13 +282,7 @@ export default function SignupPage() {
 
         {message && (
 
-          <p
-            className={`text-center mt-6 font-medium ${
-              message.includes("successful")
-                ? "text-green-400"
-                : "text-red-400"
-            }`}
-          >
+          <p className="text-center mt-6 text-white">
             {message}
           </p>
 

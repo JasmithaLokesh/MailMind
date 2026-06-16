@@ -1,81 +1,55 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  FaEye,
-  FaEyeSlash
-} from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import toast from "react-hot-toast";
 import api from "../services/api";
 
 export default function LoginPage() {
-
   const navigate = useNavigate();
 
-  const [email, setEmail] =
-    useState("");
-
-  const [password, setPassword] =
-    useState("");
-
-  const [rememberMe, setRememberMe] =
-    useState(false);
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
-  const [message, setMessage] =
-    useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (
     e: React.FormEvent
   ) => {
-
     e.preventDefault();
 
     try {
-
       const response = await api.post(
         "/api/auth/login",
         {
           email,
-          password
+          password,
         }
-      );
-
-      console.log(response.data);
-
-      setMessage(
-        "Login successful!"
       );
 
       localStorage.setItem(
         "user",
-        JSON.stringify(
-          response.data
-        )
+        JSON.stringify(response.data)
       );
+
+      toast.success("Login successful!");
 
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
-
     } catch (error: any) {
-
-      setMessage(
+      toast.error(
         error?.response?.data?.detail ||
-        "Login failed"
+          "Login failed"
       );
-
     }
   };
 
   return (
-
     <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
 
-      <div className="w-full max-w-xl bg-slate-900/90 backdrop-blur border border-slate-800 rounded-3xl p-10 shadow-2xl">
+      <div className="w-full max-w-xl bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl">
 
-        <div className="text-center mb-8">
-
+        <div className="text-center mb-10">
           <h1 className="text-5xl font-bold text-white">
             MailMind
           </h1>
@@ -83,22 +57,6 @@ export default function LoginPage() {
           <p className="text-slate-400 mt-2">
             Your AI Email Copilot
           </p>
-
-        </div>
-
-        <div className="grid grid-cols-2 mb-8 rounded-xl overflow-hidden">
-
-          <div className="bg-violet-600 text-white py-3 text-center font-semibold">
-            Sign In
-          </div>
-
-          <Link
-            to="/signup"
-            className="bg-slate-800 text-white py-3 text-center hover:bg-slate-700 transition"
-          >
-            Sign Up
-          </Link>
-
         </div>
 
         <form
@@ -111,56 +69,50 @@ export default function LoginPage() {
             placeholder="Email Address"
             value={email}
             onChange={(e) =>
-              setEmail(
-                e.target.value
-              )
+              setEmail(e.target.value)
             }
-            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white placeholder:text-slate-500 focus:border-violet-500 outline-none"
+            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white outline-none focus:border-cyan-500"
             required
           />
 
-          <div>
+          <div className="relative">
 
-            <div className="relative">
+            <input
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
+              placeholder="Password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white outline-none focus:border-cyan-500"
+              required
+            />
 
-              <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
-                placeholder="Password"
-                value={password}
-                onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
-                }
-                className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white placeholder:text-slate-500 focus:border-violet-500 outline-none"
-                required
-              />
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
-              >
-                {showPassword
-                  ? <FaEyeSlash />
-                  : <FaEye />}
-              </button>
-
-            </div>
+            <button
+              type="button"
+              onClick={() =>
+                setShowPassword(
+                  !showPassword
+                )
+              }
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+            >
+              {showPassword ? (
+                <FaEyeSlash />
+              ) : (
+                <FaEye />
+              )}
+            </button>
 
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex justify-between items-center">
 
-            <div className="flex items-center gap-2">
+            <label className="flex items-center gap-3 cursor-pointer">
 
               <input
                 type="checkbox"
@@ -170,17 +122,18 @@ export default function LoginPage() {
                     !rememberMe
                   )
                 }
+                className="h-5 w-5 accent-cyan-600 rounded"
               />
 
-              <label className="text-slate-300">
+              <span className="text-slate-300">
                 Remember Me
-              </label>
+              </span>
 
-            </div>
+            </label>
 
             <button
               type="button"
-              className="text-violet-400 hover:text-violet-300"
+              className="text-cyan-400 hover:text-cyan-300"
             >
               Forgot Password?
             </button>
@@ -189,43 +142,25 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-violet-600 hover:bg-violet-700 transition py-4 rounded-xl text-white font-semibold text-lg"
+            className="w-full bg-cyan-600 hover:bg-cyan-700 transition py-4 rounded-xl font-semibold text-lg"
           >
             Login
           </button>
 
         </form>
 
-        {message && (
-
-          <p
-            className={`text-center mt-6 font-medium ${
-              message.includes("successful")
-                ? "text-green-400"
-                : "text-red-400"
-            }`}
-          >
-            {message}
-          </p>
-
-        )}
-
-        <p className="text-center mt-6 text-slate-400">
-
+        <p className="text-center mt-8 text-slate-400">
           Don't have an account?{" "}
-
           <Link
             to="/signup"
-            className="text-violet-400 hover:text-violet-300"
+            className="text-cyan-400"
           >
             Sign Up
           </Link>
-
         </p>
 
       </div>
 
     </div>
-
   );
 }
