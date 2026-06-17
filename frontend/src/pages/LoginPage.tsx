@@ -125,6 +125,7 @@ return (
 
         <div
           className="
+          mt-4
           inline-flex
           items-center
           gap-2
@@ -164,9 +165,7 @@ return (
 
         <p
           className="
-          space-y-4
-          gap-2
-          mt-8
+          mt-12
           text-[#7ED348]
           font-semibold
           tracking-widest
@@ -179,7 +178,7 @@ return (
 
         <p
           className="
-          mt-6
+          mt-8
           text-lg
           max-w-xl
           text-slate-600
@@ -240,6 +239,8 @@ return (
       className="
       mt-10
       space-y-4
+      text-center
+      mb-12
       w-full
       max-w-xl
       mx-auto
@@ -256,13 +257,14 @@ return (
     >
       <h2
         className="
-        text-3xl
+        text-4xl
         font-bold
         text-slate-900
         dark:text-white
+        align-center
         "
       >
-        Welcome Back !
+        Welcome Back
       </h2>
 
       <p
@@ -271,7 +273,6 @@ return (
         mb-8
         text-slate-500
         dark:text-slate-400
-        font-semibold
         "
       >
         Sign in to your MailMind account
@@ -279,10 +280,10 @@ return (
 
       <button
         type="button"
+        mt-10
         onClick={handleGoogleLogin}
         className="
         w-full
-        mt-12
         flex
         items-center
         justify-center
@@ -295,6 +296,8 @@ return (
         bg-white
         dark:bg-slate-800
         hover:border-[#7ED348]
+        hover:shadow-md
+        hover:shadow-[#7ED348]/20
         transition
         "
       >
@@ -319,6 +322,8 @@ return (
   border-slate-300
   dark:border-slate-700
   hover:border-[#7ED348]
+  hover:shadow-md
+  hover:shadow-[#7ED348]/20
   transition
   "
 >
@@ -343,6 +348,8 @@ return (
   border-slate-300
   dark:border-slate-700
   hover:border-[#7ED348]
+  hover:shadow-md
+  hover:shadow-[#7ED348]/20
   transition
   "
 >
@@ -394,6 +401,8 @@ return (
           dark:text-white
           outline-none
           focus:border-[#7ED348]
+          focus:ring-2
+          focus:ring-[#7ED348]/20
           "
           required
         />
@@ -427,6 +436,8 @@ return (
             dark:text-white
             outline-none
             focus:border-[#7ED348]
+            focus:ring-2
+            focus:ring-[#7ED348]/20
             "
             required
           />

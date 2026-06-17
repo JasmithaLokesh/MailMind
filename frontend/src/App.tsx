@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from "./components/ScrollToTop";
 
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
@@ -17,6 +18,8 @@ function App() {
     <ThemeProvider>
 
       <BrowserRouter>
+
+        <ScrollToTop />
 
         <Toaster
           position="top-right"
