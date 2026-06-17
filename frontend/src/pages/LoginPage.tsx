@@ -1,295 +1,584 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { FaMicrosoft } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
+
+import {
+FaEye,
+FaEyeSlash,
+FaRobot,
+FaClock,
+FaBriefcase,
+FaBolt,
+FaArrowLeft,
+} from "react-icons/fa";
+
 import toast from "react-hot-toast";
+
 import api from "../services/api";
+import Logo from "../components/Logo";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [rememberMe, setRememberMe] = useState(false);
+const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
+const handleGoogleLogin = () => {
+toast("Google Login Coming Soon");
+};
 
-    try {
-      const response = await api.post(
-        "/api/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+const handleLogin = async (
+e: React.FormEvent
+) => {
+e.preventDefault();
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(response.data)
-      );
 
-      toast.success("Login successful!");
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
-
-    } catch (error: any) {
-
-      toast.error(
-        error?.response?.data?.detail ||
-        "Login failed"
-      );
-
+try {
+  const response = await api.post(
+    "/api/auth/login",
+    {
+      email,
+      password,
     }
-  };
+  );
 
-  return (
-    <div className="min-h-screen bg-white dark:bg-[#0F172A] flex items-center justify-center px-6 py-10">
+  localStorage.setItem(
+    "user",
+    JSON.stringify(response.data)
+  );
 
-      <div
+  toast.success("Login successful!");
+
+  setTimeout(() => {
+    navigate("/dashboard");
+  }, 1000);
+
+} catch (error: any) {
+
+  toast.error(
+    error?.response?.data?.detail ||
+    "Login failed"
+  );
+
+}
+
+
+};
+
+return (
+
+<div
+  className="
+  min-h-screen
+  bg-white
+  dark:bg-[#0F172A]
+  overflow-hidden
+  relative
+  "
+>
+
+  <div className="absolute top-20 left-10 w-96 h-96 bg-[#009DD1]/20 blur-[180px] rounded-full" />
+  <div className="absolute top-40 right-10 w-96 h-96 bg-[#7ED348]/20 blur-[180px] rounded-full" />
+  <div className="absolute bottom-20 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#97E7F5]/20 blur-[150px] rounded-full" />
+
+  <div
+    className="
+    relative
+    z-10
+    min-h-screen
+    max-w-7xl
+    mx-auto
+    px-6
+    py-6
+    grid
+    lg:grid-cols-2
+    gap-10
+    items-start
+    "
+  >
+
+    <div>
+
+      <Link
+        to="/"
         className="
-        w-full
-        max-w-xl
-        bg-white
-        dark:bg-slate-900
-        border
-        border-slate-200
-        dark:border-slate-800
-        rounded-3xl
-        p-10
-        shadow-xl
-      "
+        inline-flex
+        items-center
+        gap-2
+        text-[#009DD1]
+        hover:text-[#7ED348]
+        transition
+        mb-8
+        "
       >
+        <FaArrowLeft />
+        Back to Home
+      </Link>
 
-        {/* Logo */}
+      <Logo />
 
-        <div className="text-center mb-10">
+      <div className="mt-4">
 
-          <h1 className="text-5xl font-bold text-slate-900 dark:text-white">
-            MailMind
-          </h1>
-
-          <p className="text-slate-500 dark:text-slate-400 mt-2">
-            Your AI Email Copilot
-          </p>
-
+        <div
+          className="
+          inline-flex
+          items-center
+          gap-2
+          px-5
+          py-2
+          rounded-full
+          bg-[#7ED348]/10
+          border
+          border-[#7ED348]/40
+          text-[#7ED348]
+          font-semibold
+          "
+        >
+          <FaBolt />
+          AI Powered Email Intelligence
         </div>
 
-        {/* Form */}
-
-        <form
-          onSubmit={handleLogin}
-          className="space-y-5"
+        <h1
+          className="
+          mt-8
+          text-5xl
+          md:text-6xl
+          font-bold
+          leading-tight
+          text-slate-900
+          dark:text-white
+          "
         >
+          Never Miss
 
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
-            className="
-              w-full
-              bg-slate-100
-              dark:bg-slate-800
-              border
-              border-slate-300
-              dark:border-slate-700
-              px-4
-              py-4
-              rounded-xl
-              text-slate-900
-              dark:text-white
-              outline-none
-              focus:border-[#009DD1]
-            "
-            required
-          />
+          <span className="text-[#009DD1]">
+            {" "}Important Emails{" "}
+          </span>
 
-          <div className="relative">
-
-            <input
-              type={
-                showPassword
-                  ? "text"
-                  : "password"
-              }
-              placeholder="Password"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-              className="
-                w-full
-                bg-slate-100
-                dark:bg-slate-800
-                border
-                border-slate-300
-                dark:border-slate-700
-                px-4
-                py-4
-                rounded-xl
-                text-slate-900
-                dark:text-white
-                outline-none
-                focus:border-[#009DD1]
-              "
-              required
-            />
-
-            <button
-              type="button"
-              onClick={() =>
-                setShowPassword(
-                  !showPassword
-                )
-              }
-              className="
-                absolute
-                right-4
-                top-1/2
-                -translate-y-1/2
-                text-slate-500
-              "
-            >
-              {showPassword
-                ? <FaEyeSlash />
-                : <FaEye />}
-            </button>
-
-          </div>
-
-          {/* Remember Me */}
-
-          <div className="flex justify-between items-center">
-
-            <label className="flex items-center gap-3 cursor-pointer">
-
-              <div className="relative">
-
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={() =>
-                    setRememberMe(
-                      !rememberMe
-                    )
-                  }
-                  className="
-                    peer
-                    appearance-none
-                    w-6
-                    h-6
-                    border-2
-                    border-slate-300
-                    rounded-md
-                    cursor-pointer
-                    transition
-                    checked:bg-[#009DD1]
-                    checked:border-[#009DD1]
-                  "
-                />
-
-                <svg
-                  className="
-                    absolute
-                    left-1
-                    top-1
-                    w-4
-                    h-4
-                    text-white
-                    hidden
-                    peer-checked:block
-                    pointer-events-none
-                  "
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M5 13l4 4L19 7" />
-                </svg>
-
-              </div>
-
-              <span
-                className="
-                text-slate-700
-                dark:text-slate-300
-                font-medium
-              "
-              >
-                Remember Me
-              </span>
-
-            </label>
-
-            <button
-              type="button"
-              className="
-                text-[#009DD1]
-                hover:text-[#0086b3]
-                font-medium
-              "
-            >
-              Forgot Password?
-            </button>
-
-          </div>
-
-          {/* Login Button */}
-
-          <button
-            type="submit"
-            className="
-              w-full
-              bg-[#009DD1]
-              hover:bg-[#0086b3]
-              transition
-              py-4
-              rounded-xl
-              text-white
-              font-semibold
-              text-lg
-            "
-          >
-            Login
-          </button>
-
-        </form>
-
-        {/* Footer */}
+          Again
+        </h1>
 
         <p
           className="
-          text-center
+          space-y-4
+          gap-2
           mt-8
-          text-slate-500
-          dark:text-slate-400
-        "
-        >
-          Don't have an account?{" "}
-
-          <Link
-            to="/signup"
-            className="
-            text-[#009DD1]
-            font-medium
-            hover:text-[#0086b3]
+          text-[#7ED348]
+          font-semibold
+          tracking-widest
+          uppercase
+          text-sm
           "
-          >
-            Sign Up
-          </Link>
+        >
+          Smart • Fast • Actionable
+        </p>
 
+        <p
+          className="
+          mt-6
+          text-lg
+          max-w-xl
+          text-slate-600
+          dark:text-slate-300
+          "
+        >
+          MailMind analyzes your inbox,
+          extracts deadlines, summarizes
+          conversations and highlights
+          important actions automatically.
         </p>
 
       </div>
 
+      <div className="grid gap-4 mt-10">
+
+        <div className="lg:-mt-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+          <FaRobot className="text-[#009DD1] text-2xl" />
+          <div>
+            <h3 className="font-semibold">
+              AI Summaries
+            </h3>
+            <p className="text-sm text-slate-500">
+              Understand emails instantly.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+          <FaClock className="text-[#7ED348] text-2xl" />
+          <div>
+            <h3 className="font-semibold">
+              Deadline Detection
+            </h3>
+            <p className="text-sm text-slate-500">
+              Never miss important dates.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4">
+          <FaBriefcase className="text-[#97E7F5] text-2xl" />
+          <div>
+            <h3 className="font-semibold">
+              Interview Tracking
+            </h3>
+            <p className="text-sm text-slate-500">
+              Spot recruiter emails instantly.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
     </div>
-  );
+
+    <div
+      className="
+      mt-10
+      space-y-4
+      w-full
+      max-w-xl
+      mx-auto
+      bg-white
+      dark:bg-slate-900
+      border
+      border-slate-200
+      dark:border-slate-800
+      rounded-3xl
+      p-8
+      md:p-10
+      shadow-2xl
+      "
+    >
+      <h2
+        className="
+        text-3xl
+        font-bold
+        text-slate-900
+        dark:text-white
+        "
+      >
+        Welcome Back !
+      </h2>
+
+      <p
+        className="
+        mt-4
+        mb-8
+        text-slate-500
+        dark:text-slate-400
+        font-semibold
+        "
+      >
+        Sign in to your MailMind account
+      </p>
+
+      <button
+        type="button"
+        onClick={handleGoogleLogin}
+        className="
+        w-full
+        mt-12
+        flex
+        items-center
+        justify-center
+        gap-3
+        py-4
+        rounded-xl
+        border
+        border-slate-300
+        dark:border-slate-700
+        bg-white
+        dark:bg-slate-800
+        hover:border-[#7ED348]
+        transition
+        "
+      >
+        <span className="text-lg">
+          <FcGoogle className="text-2xl" />
+        </span>
+
+        Continue with Google
+      </button>
+
+      <button
+  type="button"
+  className="
+  w-full
+  flex
+  items-center
+  justify-center
+  gap-3
+  py-4
+  rounded-2xl
+  border
+  border-slate-300
+  dark:border-slate-700
+  hover:border-[#7ED348]
+  transition
+  "
+>
+  <FaMicrosoft
+    className="text-[#0078D4] text-xl"
+  />
+
+  Continue with Outlook
+</button>
+
+<button
+  type="button"
+  className="
+  w-full
+  flex
+  items-center
+  justify-center
+  gap-3
+  py-4
+  rounded-2xl
+  border
+  border-slate-300
+  dark:border-slate-700
+  hover:border-[#7ED348]
+  transition
+  "
+>
+  <FaEnvelope className="text-purple-600 text-xl" />
+
+  Continue with Yahoo
+</button>
+
+      <div
+        className="
+        flex
+        items-center
+        gap-4
+        my-6
+        "
+      >
+        <div className="flex-1 h-px bg-slate-300 dark:bg-slate-700" />
+
+        <span className="text-sm text-slate-500">
+          or continue with email
+        </span>
+
+        <div className="flex-1 h-px bg-slate-300 dark:bg-slate-700" />
+      </div>
+
+      <form
+        onSubmit={handleLogin}
+        className="space-y-5"
+      >
+
+        <input
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) =>
+            setEmail(e.target.value)
+          }
+          className="
+          w-full
+          bg-slate-100
+          dark:bg-slate-800
+          border
+          border-slate-300
+          dark:border-slate-700
+          px-4
+          py-4
+          rounded-xl
+          text-slate-900
+          dark:text-white
+          outline-none
+          focus:border-[#7ED348]
+          "
+          required
+        />
+
+        <div className="relative">
+
+          <input
+            type={
+              showPassword
+                ? "text"
+                : "password"
+            }
+            placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(
+                e.target.value
+              )
+            }
+            className="
+            w-full
+            bg-slate-100
+            dark:bg-slate-800
+            border
+            border-slate-300
+            dark:border-slate-700
+            px-4
+            py-4
+            rounded-xl
+            text-slate-900
+            dark:text-white
+            outline-none
+            focus:border-[#7ED348]
+            "
+            required
+          />
+
+          <button
+            type="button"
+            onClick={() =>
+              setShowPassword(
+                !showPassword
+              )
+            }
+            className="
+            absolute
+            right-4
+            top-1/2
+            -translate-y-1/2
+            text-slate-500
+            "
+          >
+            {showPassword
+              ? <FaEyeSlash />
+              : <FaEye />}
+          </button>
+
+        </div>
+
+        <div className="flex justify-between items-center">
+
+          <label className="flex items-center gap-3 cursor-pointer">
+
+            <div className="relative">
+
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() =>
+                  setRememberMe(
+                    !rememberMe
+                  )
+                }
+                className="
+                peer
+                appearance-none
+                w-6
+                h-6
+                border-2
+                border-slate-300
+                rounded-md
+                cursor-pointer
+                transition
+                checked:bg-[#009DD1]
+                checked:border-[#009DD1]
+                "
+              />
+
+              <svg
+                className="
+                absolute
+                left-1
+                top-1
+                w-4
+                h-4
+                text-white
+                hidden
+                peer-checked:block
+                pointer-events-none
+                "
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 13l4 4L19 7" />
+              </svg>
+
+            </div>
+
+            <span
+              className="
+              text-slate-700
+              dark:text-slate-300
+              font-medium
+              "
+            >
+              Remember Me
+            </span>
+
+          </label>
+
+          <button
+            type="button"
+            className="
+            text-[#009DD1]
+            hover:text-[#7ED348]
+            transition
+            font-medium
+            "
+          >
+            Forgot Password?
+          </button>
+
+        </div>
+
+        <button
+          type="submit"
+          className="
+          w-full
+          py-4
+          rounded-xl
+          bg-[#009DD1]
+          hover:bg-[#0087b4]
+          text-white
+          font-semibold
+          text-lg
+          shadow-lg
+          hover:scale-[1.02]
+          transition
+          "
+        >
+          Login
+        </button>
+
+      </form>
+
+      <p
+        className="
+        text-center
+        mt-8
+        text-slate-500
+        dark:text-slate-400
+        "
+      >
+        Don't have an account?{" "}
+
+        <Link
+          to="/signup"
+          className="
+          text-[#009DD1]
+          hover:text-[#7ED348]
+          font-semibold
+          "
+        >
+          Sign Up
+        </Link>
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+);
 }
