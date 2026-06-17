@@ -54,6 +54,24 @@ export function ThemeProvider({
       theme
     );
 
+    if (theme === "light") {
+
+  document.body.style.backgroundColor =
+    "#FFFFFF";
+
+  document.body.style.color =
+    "#0F172A";
+
+} else {
+
+  document.body.style.backgroundColor =
+    "#0F172A";
+
+  document.body.style.color =
+    "#FFFFFF";
+
+}
+
     localStorage.setItem(
       "theme",
       theme
@@ -68,6 +86,8 @@ export function ThemeProvider({
         ? "dark"
         : "light"
     );
+
+    console.log("Theme changed");
 
   };
 

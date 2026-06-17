@@ -16,33 +16,40 @@ export default function ThemeToggle() {
 
   return (
 
-    <button
-      onClick={toggleTheme}
-      className="
-      flex
-      items-center
-      gap-2
-      px-4
-      py-2
-      rounded-xl
-      border
-      transition
-      "
-    >
+  <button
+    onClick={toggleTheme}
+    className="
+    w-14
+    h-14
+    rounded-2xl
+    border
+    border-[#97E7F5]
+    bg-white
+    dark:bg-slate-800
+    flex
+    items-center
+    justify-center
+    shadow-sm
+    hover:shadow-md
+    hover:scale-105
+    transition-all
+    duration-300
+    "
+  >
 
-      {theme === "light" ? (
-        <>
-          <FaMoon />
-          Dark
-        </>
-      ) : (
-        <>
-          <FaSun />
-          Light
-        </>
-      )}
+    {theme === "light" ? (
+      <FaMoon
+        size={22}
+        className="text-[#009DD1]"
+      />
+    ) : (
+      <FaSun
+        size={22}
+        className="text-[#7ED348]"
+      />
+    )}
 
-    </button>
+  </button>
 
-  );
+);
 }

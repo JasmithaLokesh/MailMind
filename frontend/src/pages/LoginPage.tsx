@@ -36,28 +36,50 @@ export default function LoginPage() {
       setTimeout(() => {
         navigate("/dashboard");
       }, 1000);
+
     } catch (error: any) {
+
       toast.error(
         error?.response?.data?.detail ||
-          "Login failed"
+        "Login failed"
       );
+
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white dark:bg-[#0F172A] flex items-center justify-center px-6 py-10">
 
-      <div className="w-full max-w-xl bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl">
+      <div
+        className="
+        w-full
+        max-w-xl
+        bg-white
+        dark:bg-slate-900
+        border
+        border-slate-200
+        dark:border-slate-800
+        rounded-3xl
+        p-10
+        shadow-xl
+      "
+      >
+
+        {/* Logo */}
 
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-bold text-white">
+
+          <h1 className="text-5xl font-bold text-slate-900 dark:text-white">
             MailMind
           </h1>
 
-          <p className="text-slate-400 mt-2">
+          <p className="text-slate-500 dark:text-slate-400 mt-2">
             Your AI Email Copilot
           </p>
+
         </div>
+
+        {/* Form */}
 
         <form
           onSubmit={handleLogin}
@@ -71,7 +93,21 @@ export default function LoginPage() {
             onChange={(e) =>
               setEmail(e.target.value)
             }
-            className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white outline-none focus:border-cyan-500"
+            className="
+              w-full
+              bg-slate-100
+              dark:bg-slate-800
+              border
+              border-slate-300
+              dark:border-slate-700
+              px-4
+              py-4
+              rounded-xl
+              text-slate-900
+              dark:text-white
+              outline-none
+              focus:border-[#009DD1]
+            "
             required
           />
 
@@ -88,7 +124,21 @@ export default function LoginPage() {
               onChange={(e) =>
                 setPassword(e.target.value)
               }
-              className="w-full bg-slate-800 border border-slate-700 px-4 py-4 rounded-xl text-white outline-none focus:border-cyan-500"
+              className="
+                w-full
+                bg-slate-100
+                dark:bg-slate-800
+                border
+                border-slate-300
+                dark:border-slate-700
+                px-4
+                py-4
+                rounded-xl
+                text-slate-900
+                dark:text-white
+                outline-none
+                focus:border-[#009DD1]
+              "
               required
             />
 
@@ -99,33 +149,81 @@ export default function LoginPage() {
                   !showPassword
                 )
               }
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+              className="
+                absolute
+                right-4
+                top-1/2
+                -translate-y-1/2
+                text-slate-500
+              "
             >
-              {showPassword ? (
-                <FaEyeSlash />
-              ) : (
-                <FaEye />
-              )}
+              {showPassword
+                ? <FaEyeSlash />
+                : <FaEye />}
             </button>
 
           </div>
+
+          {/* Remember Me */}
 
           <div className="flex justify-between items-center">
 
             <label className="flex items-center gap-3 cursor-pointer">
 
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={() =>
-                  setRememberMe(
-                    !rememberMe
-                  )
-                }
-                className="h-5 w-5 accent-cyan-600 rounded"
-              />
+              <div className="relative">
 
-              <span className="text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={() =>
+                    setRememberMe(
+                      !rememberMe
+                    )
+                  }
+                  className="
+                    peer
+                    appearance-none
+                    w-6
+                    h-6
+                    border-2
+                    border-slate-300
+                    rounded-md
+                    cursor-pointer
+                    transition
+                    checked:bg-[#009DD1]
+                    checked:border-[#009DD1]
+                  "
+                />
+
+                <svg
+                  className="
+                    absolute
+                    left-1
+                    top-1
+                    w-4
+                    h-4
+                    text-white
+                    hidden
+                    peer-checked:block
+                    pointer-events-none
+                  "
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+
+              </div>
+
+              <span
+                className="
+                text-slate-700
+                dark:text-slate-300
+                font-medium
+              "
+              >
                 Remember Me
               </span>
 
@@ -133,30 +231,61 @@ export default function LoginPage() {
 
             <button
               type="button"
-              className="text-cyan-400 hover:text-cyan-300"
+              className="
+                text-[#009DD1]
+                hover:text-[#0086b3]
+                font-medium
+              "
             >
               Forgot Password?
             </button>
 
           </div>
 
+          {/* Login Button */}
+
           <button
             type="submit"
-            className="w-full bg-cyan-600 hover:bg-cyan-700 transition py-4 rounded-xl font-semibold text-lg"
+            className="
+              w-full
+              bg-[#009DD1]
+              hover:bg-[#0086b3]
+              transition
+              py-4
+              rounded-xl
+              text-white
+              font-semibold
+              text-lg
+            "
           >
             Login
           </button>
 
         </form>
 
-        <p className="text-center mt-8 text-slate-400">
+        {/* Footer */}
+
+        <p
+          className="
+          text-center
+          mt-8
+          text-slate-500
+          dark:text-slate-400
+        "
+        >
           Don't have an account?{" "}
+
           <Link
             to="/signup"
-            className="text-cyan-400"
+            className="
+            text-[#009DD1]
+            font-medium
+            hover:text-[#0086b3]
+          "
           >
             Sign Up
           </Link>
+
         </p>
 
       </div>

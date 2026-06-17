@@ -253,23 +253,58 @@ export default function SignupPage() {
 
           </div>
 
-          <div className="flex items-center gap-3">
+          <label className="flex items-center gap-3 cursor-pointer">
 
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={() =>
-                setRememberMe(
-                  !rememberMe
-                )
-              }
-            />
+  <div className="relative">
 
-            <label className="text-slate-300">
-              Remember Me
-            </label>
+    <input
+      type="checkbox"
+      checked={rememberMe}
+      onChange={() =>
+        setRememberMe(!rememberMe)
+      }
+      className="
+      peer
+      appearance-none
+      w-6
+      h-6
+      border-2
+      border-slate-300
+      rounded-md
+      cursor-pointer
+      transition
+      checked:bg-[#7ED348]
+      checked:border-[#7ED348]
+      "
+    />
 
-          </div>
+    <svg
+      className="
+      absolute
+      left-1
+      top-1
+      w-4
+      h-4
+      text-white
+      hidden
+      peer-checked:block
+      pointer-events-none
+      "
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      viewBox="0 0 24 24"
+    >
+      <path d="M5 13l4 4L19 7" />
+    </svg>
+
+  </div>
+
+  <span className="text-slate-600 dark:text-slate-300 font-medium">
+    Remember Me
+  </span>
+
+</label>
 
           <button
             type="submit"
