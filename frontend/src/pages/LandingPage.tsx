@@ -29,20 +29,24 @@ export default function LandingPage() {
       {/* NAVBAR */}
 
       <nav
-        className="
-        max-w-7xl
-        mx-auto
-        px-6
-        lg:px-10
-        py-6
-        flex
-        items-center
-        justify-between
-      "
-      >
+  className="
+  max-w-7xl
+  mx-auto
+  px-4
+  sm:px-6
+  lg:px-10
+  py-5
+  flex
+  flex-col
+  md:flex-row
+  items-center
+  justify-between
+  gap-4
+"
+>
         <Logo />
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap justify-center items-center gap-3">
           <ThemeToggle />
 
           <Link
@@ -81,17 +85,19 @@ export default function LandingPage() {
 
       {/* HERO */}
 
-<section
+      <section
   className="
   relative
   overflow-hidden
   max-w-7xl
   mx-auto
-  px-6
-  lg:px-10
-  pt-16
-  md:pt-24
-  pb-28
+  px-5
+  sm:px-8
+  md:px-10
+  pt-10
+  md:pt-20
+  pb-16
+  md:pb-28
   text-center
 "
 >
@@ -105,7 +111,7 @@ export default function LandingPage() {
   left-10
   w-96
   h-96
-  bg-[#009DD1]/35
+  bg-[#009DD1]/45
   blur-[180px]
   rounded-full
   "
@@ -118,13 +124,13 @@ export default function LandingPage() {
   right-10
   w-96
   h-96
-  bg-[#7ED348]/40
+  bg-[#7ED348]/50
   blur-[180px]
   rounded-full
   "
 />
 
-  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#97E7F5]/20 blur-[150px] rounded-full" />
+  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-80 h-80 bg-[#97E7F5]/30 blur-[150px] rounded-full" />
 
   <div className="relative z-10">
 
@@ -150,7 +156,8 @@ export default function LandingPage() {
 
     <h1
   className="
-  text-5xl
+  text-4xl
+  sm:text-5xl
   md:text-7xl
   font-bold
   leading-tight
@@ -185,7 +192,8 @@ export default function LandingPage() {
       mt-8
       max-w-3xl
       mx-auto
-      text-lg
+      text-base
+      sm:text-lg
       md:text-xl
       leading-relaxed
       text-slate-600
@@ -247,13 +255,14 @@ export default function LandingPage() {
     {/* Stats */}
 
     <div
-      className="
-      grid
-      md:grid-cols-3
-      gap-6
-      mt-20
-    "
-    >
+  className="
+  grid
+  grid-cols-1
+  md:grid-cols-3
+  gap-6
+  mt-16
+"
+>
 
       <div className="p-8 rounded-3xl bg-[#97E7F5]/20 border border-[#97E7F5]">
         <h3 className="text-4xl font-bold text-[#009DD1]">
