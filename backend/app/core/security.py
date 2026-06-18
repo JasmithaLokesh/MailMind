@@ -19,3 +19,12 @@ def verify_password(
         plain_password,
         hashed_password
     )
+
+import hashlib
+
+
+def hash_email(email: str):
+
+    return hashlib.sha256(
+        email.lower().encode()
+    ).hexdigest()

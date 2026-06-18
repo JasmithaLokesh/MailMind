@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaMicrosoft } from "react-icons/fa";
 import { FaEnvelope } from "react-icons/fa";
-
+import {
+  encryptData
+} from "../utils/encryption";
 import {
 FaEye,
 FaEyeSlash,
@@ -38,23 +40,29 @@ e.preventDefault();
 
 
 try {
-  const response = await api.post(
-    "/api/auth/login",
-    {
-      email,
-      password,
-    }
+  const encryptedPayload =
+  encryptData({
+    email,
+    password,
+  });
+
+await api.post(
+  "/api/auth/login",
+  {
+    payload:
+      encryptedPayload,
+  }
+);
+
+  localStorage.setItem(
+    "user",
+    JSON.stringify(encryptedPayload)
   );
 
   localStorage.setItem(
-  "user",
-  JSON.stringify(response.data.details)
-);
-
-  localStorage.setItem(
-  "session_id",
-  response.data.session_id
-);
+    "session_id",
+    encryptedPayload
+  );
 
   toast.success("Login successful!");
 
@@ -294,12 +302,10 @@ return (
         justify-center
         gap-3
         py-4
-        rounded-xl
+        rounded-2xl
         border
         border-slate-300
         dark:border-slate-700
-        bg-white
-        dark:bg-slate-800
         hover:border-[#7ED348]
         hover:shadow-md
         hover:shadow-[#7ED348]/20

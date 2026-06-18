@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import {
+  encryptData
+} from "../utils/encryption";
 
 import Logo from "../components/Logo";
 
@@ -97,17 +100,22 @@ export default function SignupPage() {
 
     try {
 
-      const response =
-        await api.post(
-          "/api/auth/signup",
-          {
-            email,
-            full_name: fullName,
-            password,
-          }
-        );
+  const encryptedPayload =
+    encryptData({
+      email,
+      full_name: fullName,
+      password,
+    });
 
-      console.log(response.data);
+await api.post(
+  "/api/auth/signup",
+  {
+    payload:
+      encryptedPayload,
+  }
+);
+
+      console.log(encryptedPayload);
 
       toast.success(
       "Welcome to MailMind !"

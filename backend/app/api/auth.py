@@ -4,14 +4,15 @@ from fastapi import (
     HTTPException
 )
 
+from app.core.encryption import (
+    decrypt_payload
+)
 import uuid
 
 from sqlalchemy.orm import Session
 
 from app.schemas.user import (
-    UserCreate,
     UserResponse,
-    UserLogin,
     UserUpdate
 )
 
@@ -23,7 +24,16 @@ from app.core.security import (
     hash_password,
     verify_password
 )
-from backend.app.schemas import user
+
+from app.core.error_codes import (
+    SUCCESS,
+    INVALID_CREDENTIALS,
+    EMAIL_EXISTS
+)
+
+from app.core.audit_logger import (
+    write_audit_log
+)
 
 router = APIRouter()
 
@@ -34,32 +44,44 @@ def test_auth():
         "message": "Auth route working"
     }
 
-
 @router.post(
     "/signup",
-    response_model=UserResponse
 )
 def signup(
-    user: UserCreate,
+    data: dict,
     db: Session = Depends(get_db)
 ):
+
+    decrypted = decrypt_payload(
+        data["payload"]
+    )
+
+    email = decrypted["email"]
+
+    full_name = decrypted["full_name"]
+
+    password = decrypted["password"]
+
     existing_user = (
         db.query(User)
-        .filter(User.email == user.email)
+        .filter(User.email == email)
         .first()
     )
 
     if existing_user:
         raise HTTPException(
             status_code=400,
-            detail="Email already registered"
+            detail={
+                "error_code": "AUTH_003",
+                "message": "Email already registered"
+            }
         )
 
     new_user = User(
-        email=user.email,
-        full_name=user.full_name,
+        email=email,
+        full_name=full_name,
         password_hash=hash_password(
-            user.password
+            password
         )
     )
 
@@ -69,17 +91,42 @@ def signup(
 
     db.refresh(new_user)
 
-    return new_user
+    write_audit_log(
+        event="USER_SIGNUP",
+        user_email=new_user.email,
+        details="New account created"
+    )
+
+    return {
+        "success": True,
+        "error_code": "SUCCESS_001",
+        "message": "Account created successfully",
+        "details": {
+            "id": new_user.id,
+            "email": new_user.email,
+            "full_name": new_user.full_name
+        }
+    }
+
 
 @router.post("/login")
 def login(
-    credentials: UserLogin,
+    data: dict,
     db: Session = Depends(get_db)
 ):
+
+    decrypted = decrypt_payload(
+        data["payload"]
+    )
+
+    email = decrypted["email"]
+
+    password = decrypted["password"]
+
     user = (
         db.query(User)
         .filter(
-            User.email == credentials.email
+            User.email == email
         )
         .first()
     )
@@ -87,31 +134,50 @@ def login(
     if not user:
         raise HTTPException(
             status_code=401,
-            detail="Invalid email or password"
+            detail={
+                "error_code": "AUTH_001",
+                "message": "Invalid email or password"
+            }
         )
 
     if not verify_password(
-        credentials.password,
+        password,
         user.password_hash
     ):
+        write_audit_log(
+            event="FAILED_LOGIN",
+            user_email=email,
+            details="Invalid password"
+        )
         raise HTTPException(
             status_code=401,
-            detail="Invalid email or password"
+            detail={
+                "error_code": "AUTH_001",
+                "message": "Invalid email or password"
+            }
         )
 
-    session_id = str(uuid.uuid4())
+    session_id = str(
+        uuid.uuid4()
+    )
+
+    write_audit_log(
+        event="USER_LOGIN",
+        user_email=user.email,
+        details=f"Session={session_id}"
+    )
 
     return {
-    "success": True,
-    "error_code": None,
-    "message": "Login successful",
-    "session_id": session_id,
-    "details": {
-        "user_id": user.id,
-        "email": user.email,
-        "full_name": user.full_name
+        "success": True,
+        "error_code": SUCCESS,
+        "message": "Login successful",
+        "session_id": session_id,
+        "details": {
+            "user_id": user.id,
+            "email": user.email,
+            "full_name": user.full_name
+        }
     }
-}
 
 @router.put(
     "/users/{user_id}",
@@ -132,6 +198,12 @@ def update_user(
         raise HTTPException(
             status_code=404,
             detail="User not found"
+        )
+    
+        write_audit_log(
+            event="FAILED_LOGIN",
+            user_email=email,
+            details="User not found"
         )
 
     user.full_name = user_data.full_name
