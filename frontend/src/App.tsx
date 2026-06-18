@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+
 import ScrollToTop from "./components/ScrollToTop";
 
 import LandingPage from "./pages/LandingPage";
@@ -7,53 +7,42 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 
-import {
-  ThemeProvider,
-} from "./context/ThemeContext";
-
 function App() {
 
   return (
 
-    <ThemeProvider>
+    <BrowserRouter>
 
-      <BrowserRouter>
+      <ScrollToTop />
 
-        <ScrollToTop />
+      <Routes>
 
-        <Toaster
-          position="top-right"
+        <Route
+          path="/"
+          element={<LandingPage />}
         />
 
-        <Routes>
+        <Route
+          path="/login"
+          element={<LoginPage />}
+        />
 
-          <Route
-            path="/"
-            element={<LandingPage />}
-          />
+        <Route
+          path="/signup"
+          element={<SignupPage />}
+        />
 
-          <Route
-            path="/login"
-            element={<LoginPage />}
-          />
+        <Route
+          path="/dashboard"
+          element={<DashboardPage />}
+        />
 
-          <Route
-            path="/signup"
-            element={<SignupPage />}
-          />
+      </Routes>
 
-          <Route
-            path="/dashboard"
-            element={<DashboardPage />}
-          />
-
-        </Routes>
-
-      </BrowserRouter>
-
-    </ThemeProvider>
+    </BrowserRouter>
 
   );
+
 }
 
 export default App;

@@ -27,21 +27,20 @@ export function ThemeProvider({
 }) {
 
   const [theme, setTheme] =
-    useState<Theme>("light");
-
-  useEffect(() => {
+  useState<Theme>(() => {
 
     const savedTheme =
       localStorage.getItem("theme");
 
     if (
-      savedTheme === "light" ||
-      savedTheme === "dark"
+      savedTheme === "dark" ||
+      savedTheme === "light"
     ) {
-      setTheme(savedTheme);
+      return savedTheme;
     }
 
-  }, []);
+    return "light";
+  });
 
   useEffect(() => {
 
@@ -81,15 +80,13 @@ export function ThemeProvider({
 
   const toggleTheme = () => {
 
-    setTheme(
-      theme === "light"
-        ? "dark"
-        : "light"
-    );
+  setTheme((prev) =>
+    prev === "light"
+      ? "dark"
+      : "light"
+  );
 
-    console.log("Theme changed");
-
-  };
+};
 
   return (
 

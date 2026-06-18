@@ -47,9 +47,14 @@ try {
   );
 
   localStorage.setItem(
-    "user",
-    JSON.stringify(response.data)
-  );
+  "user",
+  JSON.stringify(response.data.details)
+);
+
+  localStorage.setItem(
+  "session_id",
+  response.data.session_id
+);
 
   toast.success("Login successful!");
 
@@ -73,7 +78,7 @@ return (
 
 <div
   className="
-  min-h-screen
+  min-h-[calc(100vh-48px)]
   bg-white
   dark:bg-[#0F172A]
   overflow-hidden
@@ -89,7 +94,7 @@ return (
     className="
     relative
     z-10
-    min-h-screen
+    min-h-[calc(100vh-48px)]
     max-w-7xl
     mx-auto
     px-6

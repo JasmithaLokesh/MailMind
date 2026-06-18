@@ -1,5 +1,9 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import {
   FaUser,
@@ -11,6 +15,8 @@ import {
 
 export default function DashboardPage() {
 
+  const navigate = useNavigate();
+
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
   );
@@ -19,8 +25,9 @@ export default function DashboardPage() {
     useState(false);
 
   const handleLogout = () => {
+    console.log("Logout clicked");
     localStorage.removeItem("user");
-    window.location.href = "/";
+     navigate("/");
   };
 
   const initials =

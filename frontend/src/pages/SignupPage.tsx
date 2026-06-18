@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import Logo from "../components/Logo";
@@ -22,6 +22,8 @@ import { FcGoogle } from "react-icons/fc";
 import api from "../services/api";
 
 export default function SignupPage() {
+
+  const navigate = useNavigate();
 
   const [fullName, setFullName] =
     useState("");
@@ -112,7 +114,7 @@ export default function SignupPage() {
     );
 
       setTimeout(() => {
-    window.location.href = "/login";
+        navigate("/login");
   }, 1500);
 
     } catch (error: any) {
@@ -423,7 +425,7 @@ export default function SignupPage() {
 
               <p
                 className="
-                mt-4
+                mt-6
                 text-slate-500
                 dark:text-slate-400
                 "
@@ -441,6 +443,7 @@ export default function SignupPage() {
               <button
                 type="button"
                 className="
+                mt-4
                 w-full
                 flex
                 items-center

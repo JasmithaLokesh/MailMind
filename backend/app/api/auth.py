@@ -4,6 +4,8 @@ from fastapi import (
     HTTPException
 )
 
+import uuid
+
 from sqlalchemy.orm import Session
 
 from app.schemas.user import (
@@ -21,6 +23,7 @@ from app.core.security import (
     hash_password,
     verify_password
 )
+from backend.app.schemas import user
 
 router = APIRouter()
 
@@ -96,11 +99,18 @@ def login(
             detail="Invalid email or password"
         )
 
+    session_id = str(uuid.uuid4())
+
     return {
+    "success": True,
+    "error_code": None,
     "message": "Login successful",
-    "user_id": user.id,
-    "email": user.email,
-    "full_name": user.full_name
+    "session_id": session_id,
+    "details": {
+        "user_id": user.id,
+        "email": user.email,
+        "full_name": user.full_name
+    }
 }
 
 @router.put(
