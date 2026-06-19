@@ -9,6 +9,8 @@ from app.core.encryption import (
 )
 import uuid
 
+from app.models.session import UserSession
+
 from sqlalchemy.orm import Session
 
 from app.schemas.user import (
@@ -33,6 +35,20 @@ from app.core.error_codes import (
 
 from app.core.audit_logger import (
     write_audit_log
+)
+
+from app.core.response import (
+    success_response
+)
+
+from app.services.audit_service import (
+    create_audit_log
+)
+
+from app.services.session_service import (
+    create_session,
+    deactivate_session,
+    validate_session
 )
 
 router = APIRouter()
@@ -97,16 +113,21 @@ def signup(
         details="New account created"
     )
 
-    return {
-        "success": True,
-        "error_code": "SUCCESS_001",
-        "message": "Account created successfully",
-        "details": {
+    create_audit_log(
+    db=db,
+    user_id=new_user.id,
+    action="SIGNUP",
+    status="SUCCESS"
+    )
+
+    return success_response(
+        message="Account created successfully",
+        details={
             "id": new_user.id,
             "email": new_user.email,
             "full_name": new_user.full_name
         }
-    }
+    )
 
 
 @router.post("/login")
@@ -161,23 +182,90 @@ def login(
         uuid.uuid4()
     )
 
+    create_session(
+    db=db,
+    user_id=user.id,
+    session_id=session_id
+    )
+
+    create_audit_log(
+        db=db,
+        user_id=user.id,
+        action="LOGIN",
+        status="SUCCESS",
+        session_id=session_id
+    )
+
     write_audit_log(
         event="USER_LOGIN",
         user_email=user.email,
         details=f"Session={session_id}"
     )
 
-    return {
-        "success": True,
-        "error_code": SUCCESS,
-        "message": "Login successful",
-        "session_id": session_id,
-        "details": {
+    return success_response(
+        message="Login successful",
+        session_id=session_id,
+        details={
             "user_id": user.id,
             "email": user.email,
             "full_name": user.full_name
         }
-    }
+    )
+
+from app.models.session import UserSession
+
+
+@router.post("/logout")
+def logout(
+    data: dict,
+    db: Session = Depends(get_db)
+):
+
+    session_id = data.get("session_id")
+
+    print("LOGOUT SESSION ID =", session_id)
+
+    session = (
+        db.query(UserSession)
+        .filter(
+            UserSession.session_id == session_id
+        )
+        .first()
+    )
+
+    deactivate_session(
+        db,
+        session_id
+    )
+
+    create_audit_log(
+        db=db,
+        user_id=session.user_id if session else None,
+        action="LOGOUT",
+        status="SUCCESS",
+        session_id=session_id
+    )
+
+    return success_response(
+        message="Logout successful"
+    )
+
+    deactivate_session(
+        db,
+        session_id
+    )
+
+    create_audit_log(
+        db=db,
+        user_id=None,
+        action="LOGOUT",
+        status="SUCCESS",
+        session_id=session_id
+    )
+
+    return success_response(
+    message="Logout successful"
+    )
 
 @router.put(
     "/users/{user_id}",
@@ -198,12 +286,6 @@ def update_user(
         raise HTTPException(
             status_code=404,
             detail="User not found"
-        )
-    
-        write_audit_log(
-            event="FAILED_LOGIN",
-            user_email=email,
-            details="User not found"
         )
 
     user.full_name = user_data.full_name
@@ -237,4 +319,32 @@ def delete_user(
 
     return {
         "message": f"User {user_id} deleted successfully"
+    }
+
+@router.get("/validate-session")
+def validate_user_session(
+    session_id: str,
+    db: Session = Depends(get_db)
+):
+    session = validate_session(
+        db,
+        session_id
+    )
+
+    if not session:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error_code": "AUTH_007",
+                "message": "Session expired"
+            }
+        )
+
+    return {
+        "success": True,
+        "error_code": "SUCCESS_001",
+        "message": "Session valid",
+        "details": {
+            "session_id": session_id
+        }
     }

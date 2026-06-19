@@ -46,7 +46,7 @@ try {
     password,
   });
 
-await api.post(
+const response = await api.post(
   "/api/auth/login",
   {
     payload:
@@ -56,12 +56,12 @@ await api.post(
 
   localStorage.setItem(
     "user",
-    JSON.stringify(encryptedPayload)
+    JSON.stringify(response.data.details)
   );
 
   localStorage.setItem(
     "session_id",
-    encryptedPayload
+    response.data.session_id
   );
 
   toast.success("Login successful!");

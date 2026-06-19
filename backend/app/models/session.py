@@ -10,8 +10,8 @@ from sqlalchemy.sql import func
 from app.core.database import Base
 
 
-class AuditLog(Base):
-    __tablename__ = "audit_logs"
+class UserSession(Base):
+    __tablename__ = "user_sessions"
 
     id = Column(
         Integer,
@@ -21,13 +21,14 @@ class AuditLog(Base):
 
     user_id = Column(Integer)
 
-    action = Column(String)
+    session_id = Column(
+        String,
+        unique=True
+    )
 
     status = Column(String)
 
-    session_id = Column(String)
-
-    created_at = Column(
+    login_time = Column(
         DateTime(timezone=True),
         server_default=func.now()
     )

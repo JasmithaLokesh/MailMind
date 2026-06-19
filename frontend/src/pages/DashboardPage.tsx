@@ -13,6 +13,8 @@ import {
   FaBell
 } from "react-icons/fa";
 
+import api from "../services/api";
+
 export default function DashboardPage() {
 
   const navigate = useNavigate();
@@ -24,11 +26,42 @@ export default function DashboardPage() {
   const [showProfile, setShowProfile] =
     useState(false);
 
-  const handleLogout = () => {
-    console.log("Logout clicked");
-    localStorage.removeItem("user");
-     navigate("/");
-  };
+  const handleLogout = async () => {
+
+  try {
+
+    const sessionId =
+      localStorage.getItem(
+        "session_id"
+      );
+
+    await api.post(
+      "/api/auth/logout",
+      {
+        session_id: sessionId
+      }
+    );
+
+    localStorage.removeItem(
+      "user"
+    );
+
+    localStorage.removeItem(
+      "session_id"
+    );
+
+    navigate("/");
+
+  } catch (error) {
+
+    console.error(
+      "Logout failed",
+      error
+    );
+
+  }
+
+};
 
   const initials =
     user?.full_name
