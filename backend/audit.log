@@ -20,3 +20,27 @@
 [2026-06-19 10:46:42.282991] EVENT=USER_LOGIN | USER=jasmitha@test.com | DETAILS=Session=09f2cb84-178c-4088-94e9-b6f5f3cd82cb
 [2026-06-19 11:52:51.907455] EVENT=USER_LOGIN | USER=jasmitha@test.com | DETAILS=Session=9d5ff710-9d0f-4d6f-a3b9-51f862006f60
 [2026-06-19 12:36:38.575322] EVENT=USER_LOGIN | USER=jasmitha@test.com | DETAILS=Session=16ebef18-0a90-4733-829a-ef587efb2501
+[2026-06-23 06:45:19.245193] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha0596@gmail.com | DETAILS=Reset token created. Link: http://localhost:5173/reset-password?token=ALUZgv0pxjjJVgBvM4AFzHzKOZ7nlvx4pv8NDRule-I
+[2026-06-23 06:45:45.920356] EVENT=PASSWORD_RESET_SUCCESS | USER=jasmitha0596@gmail.com | DETAILS=Password reset successful
+[2026-06-23 06:46:03.805888] EVENT=USER_LOGIN | USER=jasmitha0596@gmail.com | DETAILS=Session=7ff55aa9-f57d-49e3-b744-2d55ab8ce5d9
+[2026-06-23 06:49:17.191874] EVENT=USER_SIGNUP | USER=jasmitha0596@test.com | DETAILS=New account created
+[2026-06-23 06:49:27.310376] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=f6816b75-98a0-46f9-aec8-d43deb528afc
+[2026-06-23 07:31:44.128753] EVENT=USER_SIGNUP | USER=john.doe@example.com | DETAILS=New account created
+[2026-06-23 07:32:49.383094] EVENT=USER_SIGNUP | USER=shaun@gmail.com | DETAILS=New account created
+[2026-06-23 07:33:03.485303] EVENT=USER_LOGIN | USER=shaun@gmail.com | DETAILS=Session=327986ea-1913-42da-87bb-52023bdcc6b7
+[2026-06-23 07:34:03.873527] EVENT=USER_OUTLOOK_LOGIN | USER=outlook_test@mailmind.com | DETAILS=Session=a476de7c-2757-4ad2-9d7a-109868e591af
+[2026-06-23 07:34:03.989177] EVENT=USER_OUTLOOK_LOGIN | USER=outlook_test@mailmind.com | DETAILS=Session=1b3d2ca5-d300-4d30-9d6f-9b74efa39487
+[2026-06-23 07:34:12.769429] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=cfb49aef-fec1-4ede-9469-4c0899228d9a
+[2026-06-23 07:34:12.782363] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=98180fa3-15ce-4df4-94fd-4aa042253416
+[2026-06-23 07:34:38.878755] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=4cf46481-3eec-4ace-90aa-ff0da7db2381
+[2026-06-23 08:41:52.442756] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=1c5ede01-2b5b-489e-8e38-9b342cd2f12f
+[2026-06-23 08:43:56.779183] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=875dfa98-1ba6-4379-b21c-27d5434df50f
+[2026-06-23 09:02:57.628933] EVENT=USER_SIGNUP | USER=api_test_new@mailmind.com | DETAILS=New account created
+[2026-06-23 09:02:59.929733] EVENT=USER_LOGIN | USER=api_test_new@mailmind.com | DETAILS=Session=1cf47e9f-be8a-43ae-a139-294d3dd4fbda
+[2026-06-23 09:26:57.067958] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=c73ee0ab-19a0-488e-ab07-822d98a55444
+[2026-06-23 09:27:55.787698] EVENT=USER_SIGNUP | USER=morgan@test.com | DETAILS=New account created
+[2026-06-23 09:28:14.879113] EVENT=USER_LOGIN | USER=morgan@test.com | DETAILS=Session=231b33a2-c926-41e5-a42b-a69fd09536de
+[2026-06-23 09:28:25.870745] EVENT=USER_OUTLOOK_LOGIN | USER=outlook_test@mailmind.com | DETAILS=Session=69ead328-40c4-4e65-bd59-3ab0f5e6141d
+[2026-06-23 09:28:25.959551] EVENT=USER_OUTLOOK_LOGIN | USER=outlook_test@mailmind.com | DETAILS=Session=3a10e704-d9f3-4b32-ba04-60947fa53e2d
+[2026-06-23 09:28:32.746781] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=cdd60f21-f490-4b39-8105-1cfdf424950b
+[2026-06-23 09:28:32.746781] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=b9ffb1cb-24f5-4c8d-8cc1-1115a88b6061

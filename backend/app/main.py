@@ -6,7 +6,13 @@ from app.core.database import Base, engine
 from app.models import User
 from app.api.auth import router as auth_router
 
+from app.routes.google_auth import router as google_router
+from app.routes.outlook_auth import router as outlook_router
+from app.routes.yahoo_auth import router as yahoo_router
+from app.core.migration import run_db_migrations
+
 Base.metadata.create_all(bind=engine)
+run_db_migrations()
 
 app = FastAPI(
     title="MailMind API",
@@ -53,6 +59,24 @@ app.include_router(
     auth_router,
     prefix="/api/auth",
     tags=["Authentication"]
+)
+
+app.include_router(
+    google_router,
+    prefix="/api/auth",
+    tags=["Google Authentication"]
+)
+
+app.include_router(
+    outlook_router,
+    prefix="/api/auth",
+    tags=["Outlook Authentication"]
+)
+
+app.include_router(
+    yahoo_router,
+    prefix="/api/auth",
+    tags=["Yahoo Authentication"]
 )
 
 @app.get("/")

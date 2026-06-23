@@ -44,10 +44,20 @@ export default function DashboardPage() {
     validateSession();
   }, [navigate]);
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  let user: any = {};
+  try {
+    const rawUser = localStorage.getItem("user");
+    if (rawUser && rawUser !== "undefined" && rawUser !== "null") {
+      user = JSON.parse(rawUser);
+    }
+  } catch (error) {
+    console.error("Failed to parse user from localStorage", error);
+  }
 
   const initials =
-    user?.full_name?.split(" ").map((n:string)=>n[0]).join("").slice(0,2).toUpperCase() || "U";
+    user?.full_name
+      ? user.full_name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase()
+      : "U";
 
   const handleLogout = async () => {
     try {

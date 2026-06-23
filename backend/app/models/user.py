@@ -17,6 +17,14 @@ class User(Base):
 
     google_id = Column(String)
 
+    microsoft_id = Column(String, unique=True, nullable=True)
+
+    yahoo_id = Column(String, unique=True, nullable=True)
+
+    reset_password_token = Column(String, nullable=True)
+
+    reset_password_expires = Column(DateTime(timezone=True), nullable=True)
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now()

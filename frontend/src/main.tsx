@@ -11,6 +11,8 @@ import {
 
 import AppToaster from "./components/AppToaster";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 createRoot(
   document.getElementById("root")!
 ).render(
@@ -19,7 +21,12 @@ createRoot(
 
     <ThemeProvider>
 
+      <GoogleOAuthProvider
+ clientId="882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com">
+
       <App />
+
+      </GoogleOAuthProvider>
 
       <AppToaster />
 

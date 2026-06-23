@@ -348,3 +348,100 @@ def validate_user_session(
             "session_id": session_id
         }
     }
+
+import secrets
+from datetime import datetime, timedelta, timezone
+
+@router.post("/forgot-password")
+def forgot_password(
+    data: dict,
+    db: Session = Depends(get_db)
+):
+    decrypted = decrypt_payload(data["payload"])
+    email = decrypted.get("email")
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+
+    user = db.query(User).filter(User.email == email).first()
+    token = secrets.token_urlsafe(32)
+
+    if user:
+        user.reset_password_token = token
+        user.reset_password_expires = datetime.now(timezone.utc) + timedelta(hours=1)
+        db.commit()
+
+        reset_link = f"http://localhost:5173/reset-password?token={token}"
+        write_audit_log(
+            event="PASSWORD_RESET_REQUESTED",
+            user_email=email,
+            details=f"Reset token created. Link: {reset_link}"
+        )
+        print(f"\n========================================\n"
+              f"MOCK EMAIL SENT TO: {email}\n"
+              f"Subject: Reset Your MailMind Password\n"
+              f"Reset Link: {reset_link}\n"
+              f"========================================\n")
+
+    return success_response(
+        message="If the email is registered, a password reset link has been sent.",
+        details={"token": token}
+    )
+
+@router.post("/reset-password")
+def reset_password(
+    data: dict,
+    db: Session = Depends(get_db)
+):
+    decrypted = decrypt_payload(data["payload"])
+    token = decrypted.get("token")
+    password = decrypted.get("password")
+
+    if not token or not password:
+        raise HTTPException(status_code=400, detail="Token and password are required")
+
+    user = db.query(User).filter(User.reset_password_token == token).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error_code": "AUTH_008",
+                "message": "Invalid password reset token"
+            }
+        )
+
+    expires = user.reset_password_expires
+    if expires:
+        if expires.tzinfo is None:
+            expires = expires.replace(tzinfo=timezone.utc)
+
+        if datetime.now(timezone.utc) > expires:
+            raise HTTPException(
+                status_code=400,
+                detail={
+                    "error_code": "AUTH_009",
+                    "message": "Password reset token has expired"
+                }
+            )
+
+    user.password_hash = hash_password(password)
+    user.reset_password_token = None
+    user.reset_password_expires = None
+    db.commit()
+
+    write_audit_log(
+        event="PASSWORD_RESET_SUCCESS",
+        user_email=user.email,
+        details="Password reset successful"
+    )
+
+    create_audit_log(
+        db=db,
+        user_id=user.id,
+        action="RESET_PASSWORD",
+        status="SUCCESS"
+    )
+
+    return success_response(
+        message="Password has been reset successfully"
+    )

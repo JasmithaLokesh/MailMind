@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
@@ -6,6 +6,7 @@ import {
 } from "../utils/encryption";
 
 import Logo from "../components/Logo";
+import { useGoogleLogin } from "@react-oauth/google";
 
 import {
   FaEye,
@@ -20,25 +21,31 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 
-import { FcGoogle } from "react-icons/fc";
-
 import api from "../services/api";
 
 export default function SignupPage() {
 
   const navigate = useNavigate();
 
-  const [fullName, setFullName] =
-    useState("");
+  const [fullName, setFullName] = useState(() => {
+    return sessionStorage.getItem("signup_fullName") || "";
+  });
 
-  const [email, setEmail] =
-    useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(() => {
+    return sessionStorage.getItem("signup_acceptedTerms") === "true";
+  });
 
-  const [password, setPassword] =
-    useState("");
+  const [email, setEmail] = useState(() => {
+    return sessionStorage.getItem("signup_email") || "";
+  });
 
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
+  const [password, setPassword] = useState(() => {
+    return sessionStorage.getItem("signup_password") || "";
+  });
+
+  const [confirmPassword, setConfirmPassword] = useState(() => {
+    return sessionStorage.getItem("signup_confirmPassword") || "";
+  });
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -50,6 +57,88 @@ export default function SignupPage() {
 
   const [message, setMessage] =
     useState("");
+
+  useEffect(() => {
+    sessionStorage.setItem("signup_fullName", fullName);
+  }, [fullName]);
+
+  useEffect(() => {
+    sessionStorage.setItem("signup_email", email);
+  }, [email]);
+
+  useEffect(() => {
+    sessionStorage.setItem("signup_password", password);
+  }, [password]);
+
+  useEffect(() => {
+    sessionStorage.setItem("signup_confirmPassword", confirmPassword);
+  }, [confirmPassword]);
+
+  useEffect(() => {
+    sessionStorage.setItem("signup_acceptedTerms", String(acceptedTerms));
+  }, [acceptedTerms]);
+
+  const clearSignupForm = () => {
+    sessionStorage.removeItem("signup_fullName");
+    sessionStorage.removeItem("signup_email");
+    sessionStorage.removeItem("signup_password");
+    sessionStorage.removeItem("signup_confirmPassword");
+    sessionStorage.removeItem("signup_acceptedTerms");
+  };
+
+  const handleOutlookLogin = () => {
+    const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID || "YOUR_MICROSOFT_CLIENT_ID";
+    if (clientId === "YOUR_MICROSOFT_CLIENT_ID" || clientId === "YOUR_CLIENT_ID" || !clientId) {
+      clearSignupForm();
+      navigate("/auth/callback/outlook?code=mock_outlook_code");
+      return;
+    }
+    const redirectUri = encodeURIComponent("http://localhost:5173/auth/callback/outlook");
+    const scope = encodeURIComponent("user.read");
+    const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${scope}&state=outlook`;
+    window.location.href = authUrl;
+  };
+
+  const handleYahooLogin = () => {
+    const clientId = import.meta.env.VITE_YAHOO_CLIENT_ID || "YOUR_YAHOO_CLIENT_ID";
+    if (clientId === "YOUR_YAHOO_CLIENT_ID" || clientId === "YOUR_CLIENT_ID" || !clientId) {
+      clearSignupForm();
+      navigate("/auth/callback/yahoo?code=mock_yahoo_code");
+      return;
+    }
+    const redirectUri = encodeURIComponent("http://localhost:5173/auth/callback/yahoo");
+    const scope = encodeURIComponent("openid profile email");
+    const authUrl = `https://api.login.yahoo.com/oauth2/request_auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=yahoo`;
+    window.location.href = authUrl;
+  };
+
+  const handleGoogleLogin = useGoogleLogin({
+    scope: "openid email profile",
+    onSuccess: async (tokenResponse) => {
+      try {
+        toast.loading("Google authenticating...", { id: "google-signup" });
+        const response = await api.post("/api/auth/google", {
+          token: tokenResponse.access_token
+        });
+        const data = response.data;
+        if (data.success) {
+          localStorage.setItem("session_id", data.session_id);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          toast.success("Google Authentication Successful", { id: "google-signup" });
+          clearSignupForm();
+          navigate("/dashboard");
+        } else {
+          toast.error(data.error || "Google login failed.", { id: "google-signup" });
+        }
+      } catch (error: any) {
+        console.error(error);
+        toast.error("Google Login Failed", { id: "google-signup" });
+      }
+    },
+    onError: () => {
+      toast.error("Google Login Failed");
+    }
+  });
 
   const getPasswordStrength = () => {
 
@@ -89,6 +178,11 @@ export default function SignupPage() {
 
     e.preventDefault();
 
+    if (!acceptedTerms) {
+      toast.error("Please accept the Terms & Conditions and Privacy Policy");
+      return;
+    }
+
     if (password !== confirmPassword) {
 
       setMessage(
@@ -121,6 +215,8 @@ await api.post(
       "Welcome to MailMind !"
     );
 
+      clearSignupForm();
+
       setTimeout(() => {
         navigate("/login");
   }, 1500);
@@ -128,6 +224,8 @@ await api.post(
     } catch (error: any) {
 
       toast.error(
+        error?.response?.data?.detail?.message ||
+        error?.response?.data?.detail ||
         "Failed to create account."
       );
 
@@ -446,36 +544,43 @@ await api.post(
 
             {/* SOCIAL SIGNUP */}
 
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center w-full">
+
+              <div className="w-full flex justify-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => handleGoogleLogin()}
+                  className="
+                  w-full
+                  flex
+                  items-center
+                  justify-center
+                  gap-3
+                  py-4
+                  rounded-2xl
+                  border
+                  border-slate-300
+                  dark:border-slate-700
+                  hover:border-[#7ED348]
+                  hover:shadow-md
+                  hover:shadow-[#7ED348]/20
+                  transition-all
+                  duration-300
+                  "
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                  </svg>
+                  Continue with Google
+                </button>
+              </div>
 
               <button
                 type="button"
-                className="
-                mt-4
-                w-full
-                flex
-                items-center
-                justify-center
-                gap-3
-                py-4
-                rounded-2xl
-                border
-                border-slate-300
-                dark:border-slate-700
-                hover:border-[#7ED348]
-                hover:shadow-md
-                hover:shadow-[#7ED348]/20
-                transition-all
-                duration-300
-                "
-              >
-                <FcGoogle className="text-2xl" />
-
-                Continue with Google
-              </button>
-
-              <button
-                type="button"
+                onClick={handleOutlookLogin}
                 className="
                 w-full
                 flex
@@ -503,6 +608,7 @@ await api.post(
 
               <button
                 type="button"
+                onClick={handleYahooLogin}
                 className="
                 w-full
                 flex
@@ -825,6 +931,8 @@ await api.post(
 
     <input
       type="checkbox"
+      checked={acceptedTerms}
+      onChange={(e) => setAcceptedTerms(e.target.checked)}
       required
       className="
       peer
@@ -872,18 +980,27 @@ await api.post(
     "
   >
     I agree to the{" "}
-
     <Link
       to="/terms"
       className="
       text-[#009DD1]
       hover:text-[#7ED348]
-      font-medium
+      font-semibold hover:underline
       "
     >
       Terms & Conditions
     </Link>
-
+    {" "}and{" "}
+    <Link
+      to="/privacy"
+      className="
+      text-[#009DD1]
+      hover:text-[#7ED348]
+      font-semibold hover:underline
+      "
+    >
+      Privacy Policy
+    </Link>
   </span>
 
 </label>
@@ -946,6 +1063,13 @@ await api.post(
               </Link>
 
             </p>
+
+            <div className="mt-8 text-center text-xs text-slate-400">
+              By registering, you agree to our{" "}
+              <Link to="/terms" className="text-[#009DD1] hover:underline font-semibold">Terms of Service</Link>
+              {" "}and{" "}
+              <Link to="/privacy" className="text-[#009DD1] hover:underline font-semibold">Privacy Policy</Link>
+            </div>
 
           </div>
 
