@@ -20,14 +20,11 @@ createRoot(
   <StrictMode>
 
     <ThemeProvider>
-
       <GoogleOAuthProvider
- clientId="882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com">
-
-      <App />
-
+        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com"}
+      >
+        <App />
       </GoogleOAuthProvider>
-
       <AppToaster />
 
     </ThemeProvider>

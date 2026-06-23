@@ -10,6 +10,12 @@ def run_db_migrations():
     columns = [col['name'] for col in inspector.get_columns('users')]
     
     with engine.begin() as conn:
+        if 'google_id' not in columns:
+            try:
+                conn.execute(text("ALTER TABLE users ADD COLUMN google_id VARCHAR;"))
+                print("Migration: Added google_id column to users table.")
+            except Exception as e:
+                print(f"Migration error for google_id: {e}")
         if 'microsoft_id' not in columns:
             try:
                 conn.execute(text("ALTER TABLE users ADD COLUMN microsoft_id VARCHAR UNIQUE;"))

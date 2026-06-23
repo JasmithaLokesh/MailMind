@@ -12,9 +12,11 @@ from app.services.session_service import create_session
 
 import uuid
 
+import os
+
 router = APIRouter()
 
-GOOGLE_CLIENT_ID = "882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com")
 
 
 import requests as httprequests

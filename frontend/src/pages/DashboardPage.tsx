@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [showProfile, setShowProfile] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     const validateSession = async () => {
@@ -82,9 +83,9 @@ export default function DashboardPage() {
 
   return (
     <div className={`${theme==="dark"?"bg-[#0F172A] text-white":"bg-white text-[#0F172A]"} min-h-screen flex`}>
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-      <main className="flex-1 p-8 lg:p-10">
+      <main className="flex-1 p-8 lg:p-10 transition-all duration-300">
 
         <div className="flex justify-between items-start mb-8">
           <div>

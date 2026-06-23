@@ -21,9 +21,15 @@ export default function OAuthCallbackPage() {
       try {
         toast.loading(`Authenticating with ${provider}...`, { id: "oauth-exchange" });
         
-        const response = await api.post(`/api/auth/${provider}`, {
-          code: code
-        });
+        const payload: any = { code: code };
+        if (provider === "outlook") {
+          const verifier = sessionStorage.getItem("outlook_code_verifier");
+          if (verifier) {
+            payload.code_verifier = verifier;
+          }
+        }
+        
+        const response = await api.post(`/api/auth/${provider}`, payload);
         
         const data = response.data;
         

@@ -15,6 +15,10 @@ import {
 import {
   encryptData
 } from "../utils/encryption";
+import {
+  generateCodeVerifier,
+  generateCodeChallenge
+} from "../utils/pkce";
 
 import toast from "react-hot-toast";
 
@@ -57,15 +61,20 @@ const navigate = useNavigate();
     }
   });
 
-  const handleOutlookLogin = () => {
+  const handleOutlookLogin = async () => {
     const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID || "YOUR_MICROSOFT_CLIENT_ID";
+    const tenantId = import.meta.env.VITE_MICROSOFT_TENANT_ID || "common";
     if (clientId === "YOUR_MICROSOFT_CLIENT_ID" || clientId === "YOUR_CLIENT_ID" || !clientId) {
       navigate("/auth/callback/outlook?code=mock_outlook_code");
       return;
     }
-    const redirectUri = encodeURIComponent("http://localhost:5173/auth/callback/outlook");
+    const verifier = generateCodeVerifier();
+    const challenge = await generateCodeChallenge(verifier);
+    sessionStorage.setItem("outlook_code_verifier", verifier);
+
+    const redirectUri = encodeURIComponent(import.meta.env.VITE_MICROSOFT_REDIRECT_URI || "http://localhost:5173/auth/callback/outlook");
     const scope = encodeURIComponent("user.read");
-    const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${scope}&state=outlook`;
+    const authUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&response_mode=query&scope=${scope}&state=outlook&code_challenge=${challenge}&code_challenge_method=S256`;
     window.location.href = authUrl;
   };
 

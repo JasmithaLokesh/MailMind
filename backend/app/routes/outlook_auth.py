@@ -13,6 +13,7 @@ router = APIRouter()
 
 MICROSOFT_CLIENT_ID = os.getenv("MICROSOFT_CLIENT_ID", "YOUR_MICROSOFT_CLIENT_ID")
 MICROSOFT_CLIENT_SECRET = os.getenv("MICROSOFT_CLIENT_SECRET", "YOUR_MICROSOFT_CLIENT_SECRET")
+MICROSOFT_TENANT_ID = os.getenv("MICROSOFT_TENANT_ID", "common")
 MICROSOFT_REDIRECT_URI = os.getenv("MICROSOFT_REDIRECT_URI", "http://localhost:5173/auth/callback/outlook")
 
 @router.post("/outlook")
@@ -21,6 +22,7 @@ async def outlook_login(
     db: Session = Depends(get_db)
 ):
     code = data.get("code")
+    code_verifier = data.get("code_verifier")
     if not code:
         raise HTTPException(status_code=400, detail="Missing OAuth code")
 
@@ -32,14 +34,19 @@ async def outlook_login(
             name = "Outlook Test User"
         else:
             # Exchange code for access token
-            token_url = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+            token_url = f"https://login.microsoftonline.com/{MICROSOFT_TENANT_ID}/oauth2/v2.0/token"
             token_data = {
                 "client_id": MICROSOFT_CLIENT_ID,
-                "client_secret": MICROSOFT_CLIENT_SECRET,
                 "code": code,
                 "redirect_uri": MICROSOFT_REDIRECT_URI,
                 "grant_type": "authorization_code"
             }
+            
+            if MICROSOFT_CLIENT_SECRET and MICROSOFT_CLIENT_SECRET not in ["YOUR_MICROSOFT_CLIENT_SECRET", "YOUR_CLIENT_SECRET", ""]:
+                token_data["client_secret"] = MICROSOFT_CLIENT_SECRET
+            
+            if code_verifier:
+                token_data["code_verifier"] = code_verifier
             
             try:
                 token_response = requests.post(token_url, data=token_data, timeout=10)
