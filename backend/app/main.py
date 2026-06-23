@@ -10,6 +10,7 @@ from app.routes.google_auth import router as google_router
 from app.routes.outlook_auth import router as outlook_router
 from app.routes.yahoo_auth import router as yahoo_router
 from app.core.migration import run_db_migrations
+from app.routes.ai import router as ai_router
 
 Base.metadata.create_all(bind=engine)
 run_db_migrations()
@@ -77,6 +78,12 @@ app.include_router(
     yahoo_router,
     prefix="/api/auth",
     tags=["Yahoo Authentication"]
+)
+
+app.include_router(
+    ai_router,
+    prefix="/api/ai",
+    tags=["AI"]
 )
 
 @app.get("/")
