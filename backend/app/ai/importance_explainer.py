@@ -4,44 +4,82 @@ def generate_importance_reason(
     actions: list
 ):
 
-    if category == "Interview":
+    reasons = []
 
-        return (
-            f"This email contains an interview invitation."
-            f" Deadline: {deadline}. "
-            f"It also requires the following actions: "
-            f"{', '.join(actions)}."
+    if category == "Job interview invitation":
+
+        reasons.append(
+            "it contains an interview invitation"
         )
 
-    elif category == "Job Application":
+    elif category == "Internship opportunity":
 
-        return (
-            f"This email relates to a job application."
-            f" Deadline: {deadline}."
+        reasons.append(
+            "it contains an internship opportunity"
         )
 
-    elif category == "Meeting":
+    elif category == "Campus placement email":
 
-        return (
-            f"This email contains meeting information."
-            f" Deadline: {deadline}."
+        reasons.append(
+            "it relates to a campus placement opportunity"
         )
 
-    elif category == "Finance":
+    elif category == "Recruiter communication":
 
-        return (
-            "This email contains financial information "
-            "that may require your attention."
+        reasons.append(
+            "it contains communication from a recruiter"
         )
 
-    elif category == "Promotion":
+    elif category == "Meeting invitation":
 
-        return (
-            "This is a promotional email and is less important."
+        reasons.append(
+            "it contains meeting information"
         )
 
-    else:
+    elif category == "Assignment submission":
+
+        reasons.append(
+            "it involves an assignment submission"
+        )
+
+    elif category == "Deadline reminder":
+
+        reasons.append(
+            "it contains an important deadline"
+        )
+
+    elif category == "Finance and payment":
+
+        reasons.append(
+            "it contains financial information"
+        )
+
+    elif category == "Promotional email":
 
         return (
-            "This email may contain useful information."
+            "This is a promotional email and is generally less important."
         )
+
+    if deadline:
+
+        reasons.append(
+            f"a deadline exists ({deadline})"
+        )
+
+    if actions:
+
+        reasons.append(
+            "it requires action from you"
+        )
+
+    if reasons:
+
+        return (
+            "This email is important because "
+            + ", ".join(reasons)
+            + "."
+        )
+
+    return (
+        "This email may contain useful information."
+    )

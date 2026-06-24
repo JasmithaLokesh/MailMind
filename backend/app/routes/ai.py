@@ -1,5 +1,11 @@
 from fastapi import APIRouter
 
+from fastapi import Depends
+
+from sqlalchemy.orm import Session
+
+from app.core.database import get_db
+
 from app.ai.email_classifier import classify_email
 
 from app.services.ai_service import (
@@ -38,6 +44,14 @@ from app.ai.spam_detector import (
     detect_spam
 )
 
+from app.ai.reply_generator import (
+    generate_reply
+)
+
+from app.services.email_analysis_service import (
+    save_analysis
+)
+
 router = APIRouter()
 
 
@@ -50,7 +64,10 @@ def test_ai():
 
 
 @router.post("/classify")
-def classify(data: dict):
+def classify(
+    data: dict,
+    db: Session = Depends(get_db)
+):
 
     print("STEP 1")
 
@@ -118,6 +135,12 @@ def classify(data: dict):
     email_text
     )
 
+    print("STEP 11")
+    reply = generate_reply(
+    result["category"],
+    email_text
+    )
+
     print("DONE")
 
     result.update(deadline_data)
@@ -141,5 +164,12 @@ def classify(data: dict):
     )
 
     result["entities"] = entities
+
+    result["suggested_reply"] = reply
+
+    save_analysis(
+    db,
+    result
+    )
 
     return result
