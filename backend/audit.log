@@ -45,3 +45,4 @@
 [2026-06-23 09:28:32.746781] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=cdd60f21-f490-4b39-8105-1cfdf424950b
 [2026-06-23 09:28:32.746781] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=b9ffb1cb-24f5-4c8d-8cc1-1115a88b6061
 [2026-06-23 09:45:28.202712] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha0596@gmail.com | DETAILS=Reset token created. Link: http://localhost:5173/reset-password?token=RDuTu_tu_Y48V-fqJfVdJRCSyQmwgxXQVI2I_GIEV0o
+[2026-06-23 13:11:16.885565] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=4df58fb7-4b48-43f7-949a-bd75f62f1b6b
