@@ -10,7 +10,8 @@ def get_sentiment_model():
     if sentiment_model is None:
 
         sentiment_model = pipeline(
-            "sentiment-analysis"
+            "sentiment-analysis",
+            model="distilbert-base-uncased-finetuned-sst-2-english"
         )
 
     return sentiment_model

@@ -23,6 +23,9 @@ def summarize_email(
 
     model = get_summarizer()
 
+    if len(text.split()) < 30:
+        return text
+
     result = model(
         text,
         max_length=60,

@@ -1,30 +1,32 @@
-def calculate_priority(
-    category,
-    confidence
-):
+def calculate_priority(category, confidence):
 
-    category_scores = {
+    priority = confidence * 100
 
-        "Interview": 95,
-        "Job Application": 90,
-        "Meeting": 85,
-        "Finance": 80,
-        "Personal": 60,
-        "Promotion": 20
+    if category == "Job interview invitation":
+        priority += 50
 
-    }
+    elif category == "Internship opportunity":
+        priority += 45
 
-    base_score = category_scores.get(
-        category,
-        50
-    )
+    elif category == "Campus placement email":
+        priority += 45
 
-    adjusted_score = (
-        base_score * 0.8 +
-        confidence * 20
-    )
+    elif category == "Recruiter communication":
+        priority += 40
 
-    return round(
-        adjusted_score,
-        2
-    )
+    elif category == "Meeting invitation":
+        priority += 30
+
+    elif category == "Assignment submission":
+        priority += 25
+
+    elif category == "Deadline reminder":
+        priority += 25
+
+    elif category == "Promotional email":
+        priority -= 15
+
+    elif category == "Newsletter":
+        priority -= 10
+
+    return min(max(priority, 0), 100)

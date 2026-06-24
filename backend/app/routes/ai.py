@@ -30,6 +30,14 @@ from app.ai.sentiment_analyzer import (
     analyze_sentiment
 )
 
+from app.ai.ner_extractor import (
+    extract_entities
+)
+
+from app.ai.spam_detector import (
+    detect_spam
+)
+
 router = APIRouter()
 
 
@@ -100,6 +108,16 @@ def classify(data: dict):
     email_text
     )
 
+    print("STEP 9")
+    spam_result = detect_spam(
+    email_text
+    )
+
+    print("STEP 10")
+    entities = extract_entities(
+    email_text
+    )
+
     print("DONE")
 
     result.update(deadline_data)
@@ -117,5 +135,11 @@ def classify(data: dict):
     result["tags"] = tags
 
     result.update(sentiment)
+
+    result.update(
+    spam_result
+    )
+
+    result["entities"] = entities
 
     return result
