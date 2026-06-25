@@ -126,14 +126,28 @@ def classify(
     )
 
     print("STEP 9")
-    spam_result = detect_spam(
-    email_text
-    )
+
+    # spam_result = detect_spam(
+    #     email_text
+    # )
+
+    spam_result = {
+    "spam_label": "No spam",
+    "spam_score": 1.0
+    }
+
+    #print("STEP 10")
+    #entities = extract_entities(
+    #email_text
+    #)
 
     print("STEP 10")
-    entities = extract_entities(
-    email_text
-    )
+
+    entities = {
+        "people": [],
+        "organizations": [],
+        "locations": []
+    }
 
     print("STEP 11")
     reply = generate_reply(
@@ -160,7 +174,7 @@ def classify(
     result.update(sentiment)
 
     result.update(
-    spam_result
+        spam_result
     )
 
     result["entities"] = entities
