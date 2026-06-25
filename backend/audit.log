@@ -46,3 +46,17 @@
 [2026-06-23 09:28:32.746781] EVENT=USER_YAHOO_LOGIN | USER=yahoo_test@mailmind.com | DETAILS=Session=b9ffb1cb-24f5-4c8d-8cc1-1115a88b6061
 [2026-06-23 09:45:28.202712] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha0596@gmail.com | DETAILS=Reset token created. Link: http://localhost:5173/reset-password?token=RDuTu_tu_Y48V-fqJfVdJRCSyQmwgxXQVI2I_GIEV0o
 [2026-06-23 13:11:16.885565] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=4df58fb7-4b48-43f7-949a-bd75f62f1b6b
+[2026-06-25 12:13:06.285533] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=4db01242-6980-4c11-99b2-ad013de8536d
+[2026-06-25 12:14:12.595029] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=50e5563e-53c8-4628-9983-1737bf558bab
+[2026-06-25 12:20:23.713303] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=6bd2ab48-813c-4d6a-9516-02c54a6ca3e9
+[2026-06-25 12:20:54.608794] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=75871173-2f51-4069-9f01-490680fa0ca0
+[2026-06-25 12:25:10.631585] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=045993e0-692e-4b30-be1a-d9df53548a9c
+[2026-06-25 12:26:34.521641] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=0cd31a60-c130-4eca-81a6-7bc4972cdae1
+[2026-06-25 12:33:03.241820] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=1f56a800-2037-491d-b6e1-479a4c3c1605
+[2026-06-25 12:33:35.655191] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=ea5eeb7b-7aed-4ab9-9c5e-96f9e9e5a34f
+[2026-06-25 12:45:30.168307] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=dfea20bd-c325-40ab-bc5a-8606e6fc6718
+[2026-06-25 12:45:43.670028] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=1112dd1e-3842-4acc-bdd9-62b1362c9d39
+[2026-06-25 12:46:12.411485] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=cdcb8be6-e9cc-478e-bd7e-d91f06b32570
+[2026-06-25 12:46:13.241123] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=2d5ea3c2-4b7d-4da8-b0fa-a66ffe64c45e
+[2026-06-25 12:50:41.570068] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=a4d1d517-8c92-4c33-8167-ea190719bf54
+[2026-06-25 12:56:11.907954] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=92f65a3b-d983-4fdb-b879-77a248d5f872

@@ -67,6 +67,9 @@ async def outlook_login(
                 headers = {"Authorization": f"Bearer {access_token}"}
                 profile_response = requests.get(graph_url, headers=headers, timeout=10)
                 profile_json = profile_response.json()
+                print("\n========== MICROSOFT PROFILE ==========")
+                print(profile_json)
+                print("=======================================\n")
                 
                 if "error" in profile_json:
                     raise HTTPException(

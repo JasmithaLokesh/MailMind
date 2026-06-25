@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../services/api";
@@ -8,7 +8,15 @@ export default function OAuthCallbackPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const hasExchanged = useRef(false);
+
   useEffect(() => {
+
+      if (hasExchanged.current) {
+      return;
+    }
+
+    hasExchanged.current = true;
     const exchangeCode = async () => {
       const code = searchParams.get("code");
       
