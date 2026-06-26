@@ -51,6 +51,10 @@ from app.services.session_service import (
     validate_session
 )
 
+from app.services.email_service import (
+    send_password_reset_email
+)
+
 router = APIRouter()
 
 
@@ -353,7 +357,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 
 @router.post("/forgot-password")
-def forgot_password(
+async def forgot_password(
     data: dict,
     db: Session = Depends(get_db)
 ):
@@ -370,21 +374,23 @@ def forgot_password(
         user.reset_password_expires = datetime.now(timezone.utc) + timedelta(hours=1)
         db.commit()
 
-        reset_link = f"http://localhost:5173/reset-password?token={token}"
+        reset_link = (
+            f"http://localhost:5173/reset-password?token={token}"
+        )
+
+        await send_password_reset_email(
+            recipient=email,
+            reset_link=reset_link
+        )
+
         write_audit_log(
             event="PASSWORD_RESET_REQUESTED",
             user_email=email,
-            details=f"Reset token created. Link: {reset_link}"
+            details="Password reset email sent."
         )
-        print(f"\n========================================\n"
-              f"MOCK EMAIL SENT TO: {email}\n"
-              f"Subject: Reset Your MailMind Password\n"
-              f"Reset Link: {reset_link}\n"
-              f"========================================\n")
 
     return success_response(
         message="If the email is registered, a password reset link has been sent.",
-        details={"token": token}
     )
 
 @router.post("/reset-password")

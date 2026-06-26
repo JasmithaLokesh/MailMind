@@ -9,14 +9,12 @@ import { encryptData } from "../utils/encryption";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resetLink, setResetLink] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
 
     setLoading(true);
-    setResetLink("");
 
     try {
       const encryptedPayload = encryptData({ email });
@@ -28,9 +26,6 @@ export default function ForgotPasswordPage() {
       const data = response.data;
       toast.success(data.message || "Reset link sent successfully!");
 
-      if (data.details?.token) {
-        setResetLink(`http://localhost:5173/reset-password?token=${data.details.token}`);
-      }
     } catch (error: any) {
       console.error(error);
       toast.error(error?.response?.data?.detail?.message || "Failed to submit request.");
@@ -83,21 +78,6 @@ export default function ForgotPasswordPage() {
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
-
-        {resetLink && (
-          <div className="mt-8 p-4 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-600 dark:text-yellow-400 text-sm space-y-2">
-            <div className="flex items-center gap-2 font-bold">
-              <FaClock /> Developer Testing Notice:
-            </div>
-            <p>A mock email was triggered. You can use the link below to verify reset password flow:</p>
-            <a
-              href={resetLink}
-              className="block font-semibold underline break-all text-[#009DD1] hover:text-[#7ED348]"
-            >
-              {resetLink}
-            </a>
-          </div>
-        )}
       </div>
     </div>
   );

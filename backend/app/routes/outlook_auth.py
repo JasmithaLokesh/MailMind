@@ -63,10 +63,14 @@ async def outlook_login(
                     raise HTTPException(status_code=400, detail="Failed to retrieve access token from Microsoft")
                     
                 # Get user info from Microsoft Graph
-                graph_url = "https://graph.microsoft.com/v1.0/me"
+                graph_url = (
+                    "https://graph.microsoft.com/v1.0/me"
+                    "?$select=id,displayName,mail,userPrincipalName,identities"
+                )
                 headers = {"Authorization": f"Bearer {access_token}"}
                 profile_response = requests.get(graph_url, headers=headers, timeout=10)
                 profile_json = profile_response.json()
+                
                 print("\n========== MICROSOFT PROFILE ==========")
                 print(profile_json)
                 print("=======================================\n")

@@ -60,3 +60,23 @@
 [2026-06-25 12:46:13.241123] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=2d5ea3c2-4b7d-4da8-b0fa-a66ffe64c45e
 [2026-06-25 12:50:41.570068] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=a4d1d517-8c92-4c33-8167-ea190719bf54
 [2026-06-25 12:56:11.907954] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=92f65a3b-d983-4fdb-b879-77a248d5f872
+[2026-06-26 04:40:48.604119] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=64ff0b07-1886-4655-9643-0d425213a283
+[2026-06-26 04:45:10.675024] EVENT=USER_OUTLOOK_LOGIN | USER=jasmitha0596_gmail.com#EXT#@jasmitha0596gmail.onmicrosoft.com | DETAILS=Session=97dce75e-04c7-4b88-8049-e724751e0367
+[2026-06-26 04:48:12.091404] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=5eae1d1f-6059-4b95-910f-047b03d78b08
+[2026-06-26 04:48:12.389711] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=020f3960-5e42-40f7-83f6-2b54bd20b353
+[2026-06-26 04:50:20.074301] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha@test.com | DETAILS=Reset token created. Link: http://localhost:5173/reset-password?token=UGKR0a8My5PQspy64WV9SzdRQdctZRiwYNMtwEX2aFM
+[2026-06-26 04:50:26.375706] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha@test.com | DETAILS=Reset token created. Link: http://localhost:5173/reset-password?token=rdiqhqXpYwwES5TKllRori5UqjXqc239Tolgd_g4eRs
+[2026-06-26 05:37:18.168315] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha0596@gmail.com | DETAILS=Password reset email sent.
+[2026-06-26 05:46:37.339092] EVENT=USER_SIGNUP | USER=jasmitha596@outlook.com | DETAILS=New account created
+[2026-06-26 05:46:55.718929] EVENT=USER_LOGIN | USER=jasmitha596@outlook.com | DETAILS=Session=70ffbbcd-3c1f-47ed-9587-21dafea90cf8
+[2026-06-26 05:47:18.110495] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 05:47:41.611382] EVENT=PASSWORD_RESET_SUCCESS | USER=jasmitha596@outlook.com | DETAILS=Password reset successful
+[2026-06-26 05:47:56.862929] EVENT=FAILED_LOGIN | USER=jasmitha596@outlook.com | DETAILS=Invalid password
+[2026-06-26 05:48:03.305325] EVENT=USER_LOGIN | USER=jasmitha596@outlook.com | DETAILS=Session=f08a3574-fac3-41d1-9153-af1ce0ac6ace
+[2026-06-26 06:25:34.626586] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 06:26:17.466883] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 06:28:10.193811] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 06:37:10.507512] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 06:53:15.484755] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 07:11:39.490937] EVENT=PASSWORD_RESET_REQUESTED | USER=jasmitha596@outlook.com | DETAILS=Password reset email sent.
+[2026-06-26 07:12:40.027654] EVENT=USER_LOGIN | USER=jasmitha0596@test.com | DETAILS=Session=c45680fb-8803-4230-bce8-da315e768580

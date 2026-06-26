@@ -81,6 +81,23 @@ export default function DashboardPage() {
       ? "bg-[#1E293B] border border-cyan-500/20"
       : "bg-[#F8FAFC] border border-[#97E7F5] shadow-md";
 
+  function formatMicrosoftEmail(email: string) {
+
+    if (
+        email.includes("#EXT#")
+    ) {
+
+        return email
+            .split("#EXT#")[0]
+            .replace("_gmail.com", "@gmail.com")
+            .replace("_outlook.com", "@outlook.com")
+            .replace("_hotmail.com", "@hotmail.com")
+            .replace("_yahoo.com", "@yahoo.com");
+    }
+
+    return email;
+}
+
   return (
     <div className={`${theme==="dark"?"bg-[#0F172A] text-white":"bg-white text-[#0F172A]"} min-h-screen flex`}>
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
@@ -149,7 +166,7 @@ export default function DashboardPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold">{user.full_name}</h3>
-                      <p className="text-sm text-slate-400">{user.email}</p>
+                      <p className="text-sm text-slate-400">{formatMicrosoftEmail(user.email)}</p>
                     </div>
                   </div>
 
@@ -163,7 +180,18 @@ export default function DashboardPage() {
 
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-3 w-full p-3 rounded-xl text-red-400"
+                    className="
+                      flex items-center gap-3
+                      w-full
+                      px-4 py-3
+                      rounded-xl
+                      text-red-500
+                      transition-all duration-200
+                      hover:bg-red-50
+                      dark:hover:bg-red-900/30
+                      hover:text-red-600
+                      hover:shadow-md
+                      "
                   >
                     <FaSignOutAlt /> Logout
                   </button>
