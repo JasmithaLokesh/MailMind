@@ -40,26 +40,21 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         {/* LOGO & TOGGLE */}
         <div className="mb-12">
           <div className={`flex items-center ${isOpen ? 'justify-between' : 'justify-center'}`}>
-            <div
+            <img
+              src="https://res.cloudinary.com/dvkhfi2zh/image/upload/v1782463879/MailMind_Logo_wbislf.png"
+              alt="MailMind Logo"
               className="
-              h-12
-              w-12
-              rounded-xl
-              bg-gradient-to-br
-              from-[#009DD1]
-              via-[#97E7F5]
-              to-[#7ED348]
-              flex
-              items-center
-              justify-center
-              text-white
-              text-2xl
-              font-extrabold
-              shadow-lg
+                h-14
+                w-14
+                object-contain
+                drop-shadow-lg
+                select-none
+                transition-transform
+                duration-300
+                hover:scale-105
               "
-            >
-              M
-            </div>
+              draggable={false}
+            />
 
             {isOpen && (
               <button

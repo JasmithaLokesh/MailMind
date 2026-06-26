@@ -2,55 +2,31 @@ export default function Logo() {
   return (
     <div className="flex items-center gap-3">
 
-      <div
+      {/* MailMind Logo */}
+
+      <img
+        src="https://res.cloudinary.com/dvkhfi2zh/image/upload/v1782463879/MailMind_Logo_wbislf.png"
+        alt="MailMind Logo"
         className="
-        relative
-        w-12
-        h-12
-        rounded-2xl
-        bg-gradient-to-br
-        from-[#009DD1]
-        via-[#97E7F5]
-        to-[#7ED348]
-        flex
-        items-center
-        justify-center
-        shadow-lg
-        shadow-cyan-200/40
-        dark:shadow-cyan-900/30
-        overflow-hidden
+          w-14
+          h-14
+          object-contain
+          drop-shadow-lg
+          select-none
         "
-      >
+        draggable={false}
+      />
 
-        <div
-          className="
-          absolute
-          inset-0
-          bg-white/10
-          backdrop-blur-sm
-          "
-        />
-
-        <span
-          className="
-          relative
-          text-white
-          font-extrabold
-          text-lg
-          "
-        >
-          M
-        </span>
-
-      </div>
+      {/* Text */}
 
       <div>
 
         <h1
           className="
-          text-2xl
-          font-extrabold
-          tracking-tight
+            text-2xl
+            font-extrabold
+            tracking-tight
+            leading-none
           "
         >
           <span className="text-[#009DD1]">
@@ -64,11 +40,12 @@ export default function Logo() {
 
         <p
           className="
-          text-xs
-          font-medium
-          text-slate-500
-          dark:text-slate-400
-          tracking-wide
+            mt-1
+            text-xs
+            font-semibold
+            tracking-wide
+            text-slate-500
+            dark:text-slate-400
           "
         >
           AI Email Copilot

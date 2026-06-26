@@ -44,7 +44,7 @@ export default function LandingPage() {
   gap-4
 "
 >
-        <Logo />
+    <Logo />
 
         <div className="flex flex-wrap justify-center items-center gap-3">
           <ThemeToggle />
