@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useGoogleLogin } from "@react-oauth/google";
 import {
   FaMicrosoft,
   FaEnvelope,
@@ -28,38 +27,30 @@ import Logo from "../components/Logo";
 export default function LoginPage() {
 const navigate = useNavigate();
 
-  const handleGoogleLogin = useGoogleLogin({
-    scope: "openid email profile",
-    onSuccess: async (tokenResponse) => {
-      try {
-        toast.loading("Google authenticating...", { id: "google-login" });
-        const response = await api.post(
-          "/api/auth/google",
-          {
-            token: tokenResponse.access_token
-          }
-        );
+  const handleGoogleLogin = async () => {
 
-        const data = response.data;
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-        if (data.success) {
-          localStorage.setItem("session_id", data.session_id);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          toast.success("Google Login Successful", { id: "google-login" });
-          navigate("/dashboard");
-        } else {
-          toast.error("Google Login Failed", { id: "google-login" });
-        }
+    const redirectUri = encodeURIComponent(
+      import.meta.env.VITE_GOOGLE_REDIRECT_URI
+    );
 
-      } catch (error) {
-        console.error(error);
-        toast.error("Google Login Failed", { id: "google-login" });
-      }
-    },
-    onError: () => {
-      toast.error("Google Login Failed");
-    }
-  });
+    const scope = encodeURIComponent(
+      "openid email profile https://www.googleapis.com/auth/gmail.readonly"
+    );
+
+    const googleAuthUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth` +
+      `?client_id=${clientId}` +
+      `&redirect_uri=${redirectUri}` +
+      `&response_type=code` +
+      `&access_type=offline` +
+      `&prompt=consent` +
+      `&scope=${scope}`;
+
+    window.location.href = googleAuthUrl;
+
+  };
 
   const handleOutlookLogin = async () => {
     const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID || "YOUR_MICROSOFT_CLIENT_ID";

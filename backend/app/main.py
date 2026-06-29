@@ -14,6 +14,7 @@ from app.routes.ai import router as ai_router
 
 from app.models import *
 from app.routes.analytics import router as analytics_router
+from app.routes.gmail import router as gmail_router
 
 Base.metadata.create_all(bind=engine)
 run_db_migrations()
@@ -93,6 +94,12 @@ app.include_router(
     analytics_router,
     prefix="/api/analytics",
     tags=["Analytics"]
+)
+
+app.include_router(
+    gmail_router,
+    prefix="/api/gmail",
+    tags=["Gmail"]
 )
 
 @app.get("/")

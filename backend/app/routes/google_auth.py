@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from google.oauth2 import id_token
 from google.auth.transport import requests
+from datetime import datetime, timedelta, timezone
+from app.models.oauth_account import OAuthAccount
 
 from sqlalchemy.orm import Session
 
@@ -27,38 +29,58 @@ async def google_login(
     db: Session = Depends(get_db)
 ):
 
-    token = data.get("token")
+    code = data.get("code")
 
     try:
         email = None
         name = None
         google_sub = None
 
-        if token and "." in token:
-            try:
-                user_info = id_token.verify_oauth2_token(
-                    token,
-                    requests.Request(),
-                    GOOGLE_CLIENT_ID,
-                    clock_skew_in_seconds=10
-                )
-                email = user_info.get("email")
-                name = user_info.get("name")
-                google_sub = user_info.get("sub")
-            except Exception:
-                pass
+        token_response = httprequests.post(
+            "https://oauth2.googleapis.com/token",
+            data={
+                "code": code,
+                "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+                "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+                "redirect_uri": os.getenv("GOOGLE_REDIRECT_URI"),
+                "grant_type": "authorization_code",
+            },
+            timeout=10
+        )
 
-        if not email:
-            userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
-            headers = {"Authorization": f"Bearer {token}"}
-            resp = httprequests.get(userinfo_url, headers=headers, timeout=10)
-            if resp.status_code == 200:
-                user_info = resp.json()
-                email = user_info.get("email")
-                name = user_info.get("name") or user_info.get("given_name", "Google User")
-                google_sub = user_info.get("sub")
-            else:
-                raise ValueError("Invalid Google token or access token")
+        if token_response.status_code != 200:
+            raise ValueError(token_response.text)
+
+        tokens = token_response.json()
+
+        access_token = tokens["access_token"]
+
+        refresh_token = tokens.get("refresh_token")
+
+        expires_in = tokens.get("expires_in", 3600)
+
+        userinfo_url = "https://www.googleapis.com/oauth2/v3/userinfo"
+
+        headers = {
+            "Authorization": f"Bearer {access_token}"
+        }
+
+        resp = httprequests.get(
+            userinfo_url,
+            headers=headers,
+            timeout=10
+        )
+
+        if resp.status_code != 200:
+            raise ValueError(resp.text)
+
+        user_info = resp.json()
+
+        email = user_info["email"]
+
+        name = user_info["name"]
+
+        google_sub = user_info["sub"]
 
         user = (
             db.query(User)
@@ -81,6 +103,41 @@ async def google_login(
                 user.google_id = google_sub
                 db.commit()
                 db.refresh(user)
+
+        expiry = datetime.now(timezone.utc) + timedelta(seconds=expires_in)
+
+        oauth = (
+            db.query(OAuthAccount)
+            .filter(
+                OAuthAccount.user_id == user.id,
+                OAuthAccount.provider == "google"
+            )
+            .first()
+        )
+
+        if oauth:
+
+            oauth.provider_email = email
+            oauth.provider_user_id = google_sub
+            oauth.access_token = access_token
+            oauth.refresh_token = refresh_token or oauth.refresh_token
+            oauth.token_expiry = expiry
+
+        else:
+
+            oauth = OAuthAccount(
+                user_id=user.id,
+                provider="google",
+                provider_email=email,
+                provider_user_id=google_sub,
+                access_token=access_token,
+                refresh_token=refresh_token,
+                token_expiry=expiry
+            )
+
+            db.add(oauth)
+
+        db.commit()
 
         session_id = str(
             uuid.uuid4()

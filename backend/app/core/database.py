@@ -6,6 +6,8 @@ from sqlalchemy.orm import (
 
 from app.core.config import DATABASE_URL
 
+Base = declarative_base()
+
 engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(
@@ -13,8 +15,6 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine
 )
-
-Base = declarative_base()
 
 
 def get_db():

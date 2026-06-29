@@ -21,6 +21,11 @@ class User(Base):
 
     yahoo_id = Column(String, unique=True, nullable=True)
 
+    last_history_id = Column(
+        String,
+        nullable=True
+    )
+
     reset_password_token = Column(String, nullable=True)
 
     reset_password_expires = Column(DateTime(timezone=True), nullable=True)
