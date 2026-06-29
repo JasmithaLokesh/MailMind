@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 import Sidebar from "../components/Sidebar";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
   FaUser,
@@ -23,6 +24,8 @@ export default function DashboardPage() {
   const { theme, toggleTheme } = useTheme();
   const [showProfile, setShowProfile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [emailsSynced, setEmailsSynced] = useState(0);
 
   useEffect(() => {
     const validateSession = async () => {
@@ -34,7 +37,10 @@ export default function DashboardPage() {
       }
 
       try {
-        await api.get(`/api/auth/validate-session?session_id=${sessionId}`);
+        await api.get(
+          `/api/auth/validate-session?session_id=${sessionId}`
+        );
+        await handleSyncInbox();
       } catch {
         localStorage.removeItem("session_id");
         localStorage.removeItem("user");
@@ -74,6 +80,46 @@ export default function DashboardPage() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleSyncInbox = async () => {
+
+    try {
+
+      setSyncing(true);
+
+      const sessionId = localStorage.getItem("session_id");
+
+      const response = await api.get(
+        `/api/gmail/sync?session_id=${sessionId}`
+      );
+
+      setEmailsSynced(response.data.total_emails);
+
+      if (response.data.new_emails_synced === 0) {
+
+          toast.success("Inbox is already up to date");
+
+      } else {
+
+          toast.success(
+              `${response.data.new_emails_synced} new email(s) synced`
+          );
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Sync failed");
+
+    } finally {
+
+      setSyncing(false);
+
+    }
+
   };
 
   const card =
@@ -209,7 +255,7 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className={`${card} rounded-3xl p-6`}><FaEnvelope className="text-[#009DD1] text-2xl mb-4"/><p>Important Emails</p><h3 className="text-4xl font-bold">23</h3></div>
+          <div className={`${card} rounded-3xl p-6`}><FaEnvelope className="text-[#009DD1] text-2xl mb-4"/><p>Emails Synced</p><h3 className="text-4xl font-bold">{emailsSynced}</h3></div>
           <div className={`${card} rounded-3xl p-6`}><FaCalendarAlt className="text-[#7ED348] text-2xl mb-4"/><p>Deadlines</p><h3 className="text-4xl font-bold">4</h3></div>
           <div className={`${card} rounded-3xl p-6`}><FaTasks className="text-[#97E7F5] text-2xl mb-4"/><p>Action Items</p><h3 className="text-4xl font-bold">9</h3></div>
           <div className={`${card} rounded-3xl p-6`}><FaBolt className="text-[#009DD1] text-2xl mb-4"/><p>Priority Score</p><h3 className="text-4xl font-bold">87%</h3></div>
@@ -241,7 +287,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid md:grid-cols-4 gap-4 mt-8">
-          <button className="rounded-2xl p-5 bg-[#009DD1] text-white">View Emails</button>
+          <button
+              onClick={handleSyncInbox}
+              disabled={syncing}
+              className="rounded-2xl p-5 bg-[#009DD1] text-white"
+          >
+              {syncing ? "Syncing..." : "Sync Inbox"}
+          </button>
           <button className="rounded-2xl p-5 bg-[#97E7F5] text-[#0F172A]">Review Deadlines</button>
           <button className="rounded-2xl p-5 bg-[#7ED348] text-[#0F172A]">AI Summary</button>
           <button className="rounded-2xl p-5 bg-[#1E293B] text-white">Open Gmail</button>

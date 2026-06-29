@@ -8,8 +8,51 @@ from app.models.session import UserSession
 from app.models.email import Email
 from email.utils import parsedate_to_datetime
 
+from app.models.user import User
+
+import base64
+
 router = APIRouter()
 
+def extract_body(payload):
+
+    if payload.get("body", {}).get("data"):
+
+        return base64.urlsafe_b64decode(
+            payload["body"]["data"]
+        ).decode(
+            "utf-8",
+            errors="ignore"
+        )
+
+    if "parts" in payload:
+
+        for part in payload["parts"]:
+
+            mime = part.get("mimeType")
+
+            if mime == "text/plain":
+
+                data = part.get("body", {}).get("data")
+
+                if data:
+
+                    return base64.urlsafe_b64decode(
+                        data
+                    ).decode(
+                        "utf-8",
+                        errors="ignore"
+                    )
+
+        for part in payload["parts"]:
+
+            text = extract_body(part)
+
+            if text:
+
+                return text
+
+    return ""
 
 @router.get("/sync")
 def sync_gmail(
@@ -34,6 +77,22 @@ def sync_gmail(
         session.user_id
     )
 
+    profile = gmail.users().getProfile(
+        userId="me"
+    ).execute()
+
+    current_history_id = profile["historyId"]
+
+    user = (
+        db.query(User)
+        .filter(User.id == session.user_id)
+        .first()
+    )
+
+    first_sync = (
+        user.last_history_id is None
+    )
+
     if gmail is None:
         raise HTTPException(
             status_code=400,
@@ -41,42 +100,80 @@ def sync_gmail(
         )
 
     email_list = []
-    page_token = None
 
-    while True:
+    if first_sync:
 
-        response = gmail.users().messages().list(
+        page_token = None
+
+        while True:
+
+            response = gmail.users().messages().list(
+                userId="me",
+                maxResults=100,
+                pageToken=page_token
+            ).execute()
+
+            email_list.extend(
+                response.get("messages", [])
+            )
+
+            page_token = response.get("nextPageToken")
+
+            if not page_token:
+                break
+
+    else:
+
+        history = gmail.users().history().list(
             userId="me",
-            maxResults=100,
-            pageToken=page_token
+            startHistoryId=user.last_history_id,
+            historyTypes=["messageAdded"]
         ).execute()
 
-        email_list.extend(
-            response.get("messages", [])
-        )
+        histories = history.get("history", [])
 
-        page_token = response.get("nextPageToken")
+        seen = set()
 
-        if not page_token:
-            break
+        for h in histories:
+
+            for msg in h.get("messagesAdded", []):
+
+                message = msg["message"]
+
+                if message["id"] not in seen:
+
+                    seen.add(message["id"])
+
+                    email_list.append(message)
+
+    new_emails = 0
 
     for item in email_list:
 
         email = gmail.users().messages().get(
             userId="me",
             id=item["id"],
-            format="metadata",
-            metadataHeaders=[
-                "From",
-                "Subject",
-                "Date"
-            ]
+            format="full"
         ).execute()
 
         headers = {}
 
+        # body = extract_body(
+        #     email["payload"]
+        # )
+
+        # print("=" * 50)
+        # print(body[:500])
+
         for h in email["payload"]["headers"]:
             headers[h["name"]] = h["value"]
+
+        body = extract_body(
+            email["payload"]
+        )
+
+        print("=" * 50)
+        print(body[:500])
 
         existing = (
             db.query(Email)
@@ -128,7 +225,7 @@ def sync_gmail(
 
             subject=headers.get("Subject"),
 
-            body="",
+            body=body,
 
             received_at=received,
 
@@ -145,7 +242,22 @@ def sync_gmail(
             action_items=None
 
         )
+        
         db.add(db_email)
+        db.commit()
+
+        new_emails += 1
+
+    # Save latest Gmail historyId
+    user = (
+        db.query(User)
+        .filter(User.id == session.user_id)
+        .first()
+    )
+
+    if user:
+        user.last_history_id = current_history_id
+        db.commit()
 
     count = (
         db.query(Email)
@@ -156,9 +268,7 @@ def sync_gmail(
     )
 
     return {
-
         "success": True,
-
+        "new_emails_synced": new_emails,
         "emails_synced": count
-
     }
