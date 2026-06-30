@@ -9,6 +9,9 @@ from app.models.email import Email
 from email.utils import parsedate_to_datetime
 
 from app.models.user import User
+from app.services.ai_service import analyze_email
+from app.services.email_analysis_service import save_analysis
+from app.utils.text_preprocessor import preprocess_email
 
 import base64
 
@@ -150,11 +153,21 @@ def sync_gmail(
 
     for item in email_list:
 
-        email = gmail.users().messages().get(
-            userId="me",
-            id=item["id"],
-            format="full"
-        ).execute()
+        print("=" * 70)
+        print("Processing Gmail ID:", item["id"])
+
+        try:
+
+            email = gmail.users().messages().get(
+                userId="me",
+                id=item["id"],
+                format="full"
+            ).execute()
+
+        except Exception as e:
+
+            print("Failed to fetch Gmail message:", e)
+            continue
 
         headers = {}
 
@@ -168,8 +181,8 @@ def sync_gmail(
         for h in email["payload"]["headers"]:
             headers[h["name"]] = h["value"]
 
-        body = extract_body(
-            email["payload"]
+        body = preprocess_email(
+            extract_body(email["payload"])
         )
 
         print("=" * 50)
@@ -192,8 +205,8 @@ def sync_gmail(
             received = parsedate_to_datetime(
                 headers.get("Date")
             )
-        except:
-            pass
+        except Exception as e:
+            print("Date parsing failed:", e)
 
 
         category = "PRIMARY"
@@ -246,7 +259,53 @@ def sync_gmail(
         db.add(db_email)
         db.commit()
 
+        print("Inserted into emails table")
+
+        db.refresh(db_email)
+
         new_emails += 1
+
+        email_text = f"""
+        Subject:
+        {db_email.subject}
+
+        From:
+        {db_email.sender}
+
+        Body:
+        {db_email.body}
+        """
+
+        try:
+
+            print("AI START")
+
+            result = analyze_email(
+                email_text
+            )
+
+            print("AI FINISHED")
+
+            save_analysis(
+                db,
+                db_email.id,
+                result
+            )
+
+            print("DB UPDATED")
+
+        except Exception as e:
+
+            print("=" * 60)
+            print("AI ERROR while processing Gmail ID:", db_email.gmail_id)
+            print("Subject:", db_email.subject)
+            print("Error:", str(e))
+            print("=" * 60)
+
+            # Continue to the next email instead of stopping the sync
+            continue
+
+        print("Finished email")
 
     # Save latest Gmail historyId
     user = (

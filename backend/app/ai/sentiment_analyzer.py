@@ -1,34 +1,12 @@
-from transformers import pipeline
+from app.ai.model_manager import get_sentiment
 
-sentiment_model = None
+def analyze_sentiment(text: str):
 
+    model = get_sentiment()
 
-def get_sentiment_model():
-
-    global sentiment_model
-
-    if sentiment_model is None:
-
-        sentiment_model = pipeline(
-            "sentiment-analysis",
-            model="distilbert-base-uncased-finetuned-sst-2-english"
-        )
-
-    return sentiment_model
-
-
-def analyze_sentiment(
-    text: str
-):
-
-    model = get_sentiment_model()
-
-    result = model(text)[0]
+    result = model(text[:512])[0]
 
     return {
         "sentiment": result["label"],
-        "sentiment_score": round(
-            result["score"],
-            2
-        )
+        "sentiment_score": round(float(result["score"]), 2)
     }

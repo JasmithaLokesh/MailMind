@@ -40,7 +40,6 @@ export default function DashboardPage() {
         await api.get(
           `/api/auth/validate-session?session_id=${sessionId}`
         );
-        await handleSyncInbox();
       } catch {
         localStorage.removeItem("session_id");
         localStorage.removeItem("user");
@@ -94,7 +93,7 @@ export default function DashboardPage() {
         `/api/gmail/sync?session_id=${sessionId}`
       );
 
-      setEmailsSynced(response.data.total_emails);
+      setEmailsSynced(response.data.emails_synced);
 
       if (response.data.new_emails_synced === 0) {
 

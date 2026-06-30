@@ -1,8 +1,6 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import "./index.css";
-
 import App from "./App.tsx";
 
 import {
@@ -17,18 +15,19 @@ createRoot(
   document.getElementById("root")!
 ).render(
 
-  <StrictMode>
-
     <ThemeProvider>
+
       <GoogleOAuthProvider
-        clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com"}
+        clientId={
+          import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+          "882563737356-bdd7v01bct0kq4baaajlrmfnoj2demhm.apps.googleusercontent.com"
+        }
       >
         <App />
       </GoogleOAuthProvider>
+
       <AppToaster />
 
     </ThemeProvider>
-
-  </StrictMode>
 
 );

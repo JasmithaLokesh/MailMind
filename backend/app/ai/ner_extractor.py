@@ -1,46 +1,18 @@
-from transformers import pipeline
-
-ner_model = None
-
-
-def get_ner():
-
-    global ner_model
-
-    if ner_model is None:
-
-        ner_model = pipeline(
-            "ner",
-            model="dslim/bert-base-NER",
-            aggregation_strategy="simple"
-        )
-
-    return ner_model
+from app.ai.model_manager import get_ner
 
 def merge_names(names):
 
     merged = []
 
-    i = 0
+    for name in names:
 
-    while i < len(names):
+        name = name.replace("##", "").strip()
 
-        current = names[i]
-
-        while (
-            i + 1 < len(names)
-            and names[i + 1].startswith("##")
-        ):
-
-            current += names[i + 1][2:]
-
-            i += 1
-
-        merged.append(current)
-
-        i += 1
+        if name:
+            merged.append(name)
 
     return merged
+
 
 def extract_entities(text: str):
 
@@ -50,9 +22,13 @@ def extract_entities(text: str):
 
     print("NER 2")
 
-    entities = model(text)
+    # Limit text to avoid BERT token overflow
+    safe_text = text[:500]
 
-    print(entities)
+    entities = model(
+        safe_text,
+        truncation=True
+    )
 
     print("NER 3")
 
@@ -63,7 +39,6 @@ def extract_entities(text: str):
     for entity in entities:
 
         label = entity["entity_group"]
-
         value = entity["word"].strip()
 
         if label == "PER":
@@ -79,13 +54,10 @@ def extract_entities(text: str):
     organizations = merge_names(organizations)
     locations = merge_names(locations)
 
-    print("PEOPLE AFTER MERGE:", people)
-
     print("NER 4")
 
     return {
-
-        "people": list(set(people)),
-        "organizations": list(set(organizations)),
-        "locations": list(set(locations))
+        "people": sorted(set(people)),
+        "organizations": sorted(set(organizations)),
+        "locations": sorted(set(locations))
     }

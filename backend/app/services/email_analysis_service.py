@@ -1,36 +1,60 @@
-from app.models.email_analysis import EmailAnalysis
+from app.models.email import Email
 
 
 def save_analysis(
     db,
+    email_id,
     result
 ):
 
-    analysis = EmailAnalysis(
-
-        category=result["category"],
-
-        priority=int(
-            result["priority"]
-        ),
-
-        deadline=result["deadline"],
-
-        summary=result["summary"],
-
-        importance_reason=result[
-            "importance_reason"
-        ],
-
-        sentiment=result["sentiment"],
-
-        spam_label=result["spam_label"]
+    email = (
+        db.query(Email)
+        .filter(
+            Email.id == email_id
+        )
+        .first()
     )
 
-    db.add(analysis)
+    if email is None:
+        return
+
+    email.classification = result["classification"]
+
+    email.priority_score = result["priority_score"]
+
+    email.summary = result["summary"]
+
+    email.action_items = (
+        "\n".join(result["action_items"])
+        if isinstance(
+            result["action_items"],
+            list
+        )
+        else result["action_items"]
+    )
+
+    email.deadline = result["deadline"]
+
+    email.suggested_reply = (
+        result["suggested_reply"]
+    )
+
+    email.importance_reason = (
+        result["importance_reason"]
+    )
+
+    email.confidence = str(
+        result["confidence"]
+    )
+
+    email.sentiment = (
+        result["sentiment"]
+    )
+
+    email.ai_processed = True
 
     db.commit()
 
-    db.refresh(analysis)
+    db.refresh(email)
 
-    return analysis
+    return email

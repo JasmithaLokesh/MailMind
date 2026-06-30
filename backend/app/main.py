@@ -16,6 +16,14 @@ from app.models import *
 from app.routes.analytics import router as analytics_router
 from app.routes.gmail import router as gmail_router
 
+from app.ai.model_manager import (
+    get_classifier,
+    get_summarizer,
+    get_sentiment,
+    get_spam,
+    get_ner
+)
+
 Base.metadata.create_all(bind=engine)
 run_db_migrations()
 
@@ -23,6 +31,21 @@ app = FastAPI(
     title="MailMind API",
     version="1.0.0"
 )
+
+# @app.on_event("startup")
+# def load_ai_models():
+
+#     print("=" * 60)
+#     print("Loading AI models...")
+
+#     get_classifier()
+#     get_summarizer()
+#     get_sentiment()
+#     get_spam()
+#     get_ner()
+
+#     print("All AI models loaded.")
+#     print("=" * 60)
 
 # CORS CONFIGURATION
 

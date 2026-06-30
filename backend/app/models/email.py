@@ -51,6 +51,23 @@ class Email(Base):
 
     action_items = Column(Text)
 
+    classification = Column(String)
+
+    deadline = Column(DateTime(timezone=True))
+
+    suggested_reply = Column(Text)
+
+    importance_reason = Column(Text)
+
+    ai_processed = Column(
+        Boolean,
+        default=False
+    )
+
+    confidence = Column(String)
+
+    sentiment = Column(String)
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now()

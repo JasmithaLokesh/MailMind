@@ -1,25 +1,6 @@
-from transformers import pipeline
+from app.ai.model_manager import get_summarizer
 
-summarizer = None
-
-
-def get_summarizer():
-
-    global summarizer
-
-    if summarizer is None:
-
-        summarizer = pipeline(
-            "summarization",
-            model="sshleifer/distilbart-cnn-12-6"
-        )
-
-    return summarizer
-
-
-def summarize_email(
-    text: str
-):
+def summarize_email(text: str):
 
     model = get_summarizer()
 
@@ -30,7 +11,8 @@ def summarize_email(
         text,
         max_length=60,
         min_length=15,
-        do_sample=False
+        do_sample=False,
+        truncation=True
     )
 
     return result[0]["summary_text"]
