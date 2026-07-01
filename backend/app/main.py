@@ -15,6 +15,7 @@ from app.routes.ai import router as ai_router
 from app.models import *
 from app.routes.analytics import router as analytics_router
 from app.routes.gmail import router as gmail_router
+from app.routes.emails import router as emails_router
 
 from app.ai.model_manager import (
     get_classifier,
@@ -123,6 +124,12 @@ app.include_router(
     gmail_router,
     prefix="/api/gmail",
     tags=["Gmail"]
+)
+
+app.include_router(
+    emails_router,
+    prefix="/api/emails",
+    tags=["Emails"]
 )
 
 @app.get("/")

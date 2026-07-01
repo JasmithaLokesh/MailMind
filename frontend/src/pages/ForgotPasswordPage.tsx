@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaClock } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import toast from "react-hot-toast";
 import Logo from "../components/Logo";
 import api from "../services/api";

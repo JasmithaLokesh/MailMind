@@ -797,3 +797,17 @@ body.dark .profile-menu {
 
     border: 1px solid #334155;
 }
+
+#extLogout {
+    color: #FF4D4F;
+}
+
+#extLogout:hover {
+    background: #FF4D4F !important;
+    color: white !important;
+}
+
+body.dark #extLogout:hover {
+    background: #FF4D4F !important;
+    color: white !important;
+}

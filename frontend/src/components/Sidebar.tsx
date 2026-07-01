@@ -7,6 +7,7 @@ import {
   FaChevronLeft,
   FaChevronRight
 } from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -14,6 +15,11 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  const isActive = (path: string) => currentPath === path;
+
   return (
     <aside
       className={`
@@ -141,104 +147,109 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         {/* NAVIGATION */}
         <nav className="space-y-3">
           {/* DASHBOARD */}
-          <button
+          <Link
+            to="/dashboard"
             className={`
             flex
             items-center
             ${isOpen ? "gap-4 w-full px-5 py-4" : "justify-center w-12 h-12 mx-auto"}
             rounded-2xl
-            bg-gradient-to-r
-            from-[#009DD1]
-            to-[#7ED348]
-            text-white
             font-semibold
-            shadow-lg
+            transition
+            duration-200
+            ${isActive("/dashboard") 
+              ? "bg-gradient-to-r from-[#009DD1] to-[#7ED348] text-white shadow-lg" 
+              : "text-[#0F172A] dark:text-white hover:bg-[#97E7F5]/30 dark:hover:bg-[#97E7F5]/10"}
             `}
             title="Dashboard"
           >
-            <FaHome className="text-xl shrink-0" />
+            <FaHome className={`${isActive("/dashboard") ? "" : "text-slate-400"} text-xl shrink-0`} />
             {isOpen && <span>Dashboard</span>}
-          </button>
+          </Link>
 
           {/* EMAILS */}
-          <button
+          <Link
+            to="/emails"
             className={`
             flex
             items-center
             ${isOpen ? "gap-4 w-full px-5 py-4" : "justify-center w-12 h-12 mx-auto"}
             rounded-2xl
-            text-[#0F172A]
-            dark:text-white
-            hover:bg-[#97E7F5]/30
-            dark:hover:bg-[#97E7F5]/10
+            font-semibold
             transition
             duration-200
+            ${isActive("/emails") || currentPath.startsWith("/emails/")
+              ? "bg-gradient-to-r from-[#009DD1] to-[#7ED348] text-white shadow-lg" 
+              : "text-[#0F172A] dark:text-white hover:bg-[#97E7F5]/30 dark:hover:bg-[#97E7F5]/10"}
             `}
             title="Emails"
           >
-            <FaEnvelope className="text-[#009DD1] text-xl shrink-0" />
+            <FaEnvelope className={`${isActive("/emails") || currentPath.startsWith("/emails/") ? "" : "text-[#009DD1]"} text-xl shrink-0`} />
             {isOpen && <span>Emails</span>}
-          </button>
+          </Link>
 
           {/* DEADLINES */}
-          <button
+          <Link
+            to="/deadlines"
             className={`
             flex
             items-center
             ${isOpen ? "gap-4 w-full px-5 py-4" : "justify-center w-12 h-12 mx-auto"}
             rounded-2xl
-            text-[#0F172A]
-            dark:text-white
-            hover:bg-[#97E7F5]/30
-            dark:hover:bg-[#97E7F5]/10
+            font-semibold
             transition
             duration-200
+            ${isActive("/deadlines") 
+              ? "bg-gradient-to-r from-[#009DD1] to-[#7ED348] text-white shadow-lg" 
+              : "text-[#0F172A] dark:text-white hover:bg-[#97E7F5]/30 dark:hover:bg-[#97E7F5]/10"}
             `}
             title="Deadlines"
           >
-            <FaCalendarAlt className="text-[#7ED348] text-xl shrink-0" />
+            <FaCalendarAlt className={`${isActive("/deadlines") ? "" : "text-[#7ED348]"} text-xl shrink-0`} />
             {isOpen && <span>Deadlines</span>}
-          </button>
+          </Link>
 
           {/* AI INSIGHTS */}
-          <button
+          <Link
+            to="/insights"
             className={`
             flex
             items-center
             ${isOpen ? "gap-4 w-full px-5 py-4" : "justify-center w-12 h-12 mx-auto"}
             rounded-2xl
-            text-[#0F172A]
-            dark:text-white
-            hover:bg-[#97E7F5]/30
-            dark:hover:bg-[#97E7F5]/10
+            font-semibold
             transition
             duration-200
+            ${isActive("/insights") 
+              ? "bg-gradient-to-r from-[#009DD1] to-[#7ED348] text-white shadow-lg" 
+              : "text-[#0F172A] dark:text-white hover:bg-[#97E7F5]/30 dark:hover:bg-[#97E7F5]/10"}
             `}
             title="AI Insights"
           >
-            <FaRobot className="text-[#009DD1] text-xl shrink-0" />
+            <FaRobot className={`${isActive("/insights") ? "" : "text-[#009DD1]"} text-xl shrink-0`} />
             {isOpen && <span>AI Insights</span>}
-          </button>
+          </Link>
 
           {/* SETTINGS */}
-          <button
+          <Link
+            to="/settings"
             className={`
             flex
             items-center
             ${isOpen ? "gap-4 w-full px-5 py-4" : "justify-center w-12 h-12 mx-auto"}
             rounded-2xl
-            text-[#0F172A]
-            dark:text-white
-            hover:bg-[#97E7F5]/30
-            dark:hover:bg-[#97E7F5]/10
+            font-semibold
             transition
             duration-200
+            ${isActive("/settings") 
+              ? "bg-gradient-to-r from-[#009DD1] to-[#7ED348] text-white shadow-lg" 
+              : "text-[#0F172A] dark:text-white hover:bg-[#97E7F5]/30 dark:hover:bg-[#97E7F5]/10"}
             `}
             title="Settings"
           >
-            <FaCog className="text-slate-500 text-xl shrink-0" />
+            <FaCog className={`${isActive("/settings") ? "" : "text-slate-500"} text-xl shrink-0`} />
             {isOpen && <span>Settings</span>}
-          </button>
+          </Link>
         </nav>
       </div>
 
