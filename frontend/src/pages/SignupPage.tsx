@@ -21,7 +21,6 @@ import {
   FaShieldAlt,
   FaClock,
   FaRobot,
-  FaMicrosoft,
   FaEnvelope,
 } from "react-icons/fa";
 
@@ -608,11 +607,14 @@ await api.post(
                 duration-300
                 "
               >
-                <FaMicrosoft
-                  className="text-[#0078D4] text-xl"
-                />
+                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 23 23">
+                  <path fill="#f35325" d="M0 0h11v11H0z" />
+                  <path fill="#80bb0a" d="M12 0h11v11H12z" />
+                  <path fill="#00a1f1" d="M0 12h11v11H0z" />
+                  <path fill="#ffb900" d="M12 12h11v11H12z" />
+                </svg>
 
-                Continue with Outlook
+                Continue with Microsoft
               </button>
 
               <button
