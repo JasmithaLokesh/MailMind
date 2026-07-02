@@ -112,30 +112,84 @@ export default function DashboardPage() {
   };
 
   const handleSyncInbox = async () => {
+
     try {
+
       setSyncing(true);
+
       const sessionId = localStorage.getItem("session_id");
+
+      const userString = localStorage.getItem("user");
+
+      if (!userString) {
+
+        toast.error("User not found");
+        return;
+
+      }
+
+      const user = JSON.parse(userString);
+
+      let endpoint = "";
+
+      switch (user.provider) {
+
+        case "gmail":
+          endpoint = "/api/gmail/sync";
+          break;
+
+        case "outlook":
+          endpoint = "/api/outlook/sync";
+          break;
+
+        case "yahoo":
+          endpoint = "/api/yahoo/sync";
+          break;
+
+        default:
+          toast.error("Unknown email provider");
+          return;
+
+      }
+
       const response = await api.get(
-        `/api/gmail/sync?session_id=${sessionId}`
+        `${endpoint}?session_id=${sessionId}`
       );
 
       if (response.data.new_emails_synced === 0) {
-          toast.success("Inbox is already up to date");
-      } else {
-          toast.success(
-              `${response.data.new_emails_synced} new email(s) synced`
-          );
+
+        toast.success(
+          "Inbox is already up to date"
+        );
+
       }
-      
-      // Refresh dashboard after sync
+
+      else {
+
+        toast.success(
+          `${response.data.new_emails_synced} new email(s) synced`
+        );
+
+      }
+
       fetchDashboardData();
 
-    } catch (error) {
-      console.error(error);
-      toast.error("Sync failed");
-    } finally {
-      setSyncing(false);
     }
+
+    catch (error) {
+
+      console.error(error);
+
+      toast.error("Sync failed");
+
+    }
+
+    finally {
+
+      setSyncing(false);
+
+    }
+
   };
 
   const card =

@@ -7,7 +7,7 @@ from app.models import User
 from app.api.auth import router as auth_router
 
 from app.routes.google_auth import router as google_router
-from app.routes.outlook_auth import router as outlook_router
+from app.routes.outlook_auth import router as outlook_auth_router
 from app.routes.yahoo_auth import router as yahoo_router
 from app.core.migration import run_db_migrations
 from app.routes.ai import router as ai_router
@@ -16,6 +16,7 @@ from app.models import *
 from app.routes.analytics import router as analytics_router
 from app.routes.gmail import router as gmail_router
 from app.routes.emails import router as emails_router
+from app.routes.outlook import router as outlook_sync_router
 
 from app.ai.model_manager import (
     get_classifier,
@@ -97,7 +98,7 @@ app.include_router(
 )
 
 app.include_router(
-    outlook_router,
+    outlook_auth_router,
     prefix="/api/auth",
     tags=["Outlook Authentication"]
 )
@@ -130,6 +131,12 @@ app.include_router(
     emails_router,
     prefix="/api/emails",
     tags=["Emails"]
+)
+
+app.include_router(
+    outlook_sync_router,
+    prefix="/api/outlook",
+    tags=["Outlook"]
 )
 
 @app.get("/")

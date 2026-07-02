@@ -3,6 +3,8 @@ import requests
 import uuid
 import os
 from sqlalchemy.orm import Session
+from app.models.oauth_account import OAuthAccount
+from datetime import datetime, timedelta
 
 from app.core.database import get_db
 from app.models.user import User
@@ -51,6 +53,11 @@ async def outlook_login(
             try:
                 token_response = requests.post(token_url, data=token_data, timeout=10)
                 token_json = token_response.json()
+
+                print("=" * 60)
+                print("TOKEN RESPONSE")
+                print(token_json)
+                print("=" * 60)
                 
                 if "error" in token_json:
                     raise HTTPException(
@@ -59,6 +66,14 @@ async def outlook_login(
                     )
                     
                 access_token = token_json.get("access_token")
+                refresh_token = token_json.get("refresh_token")
+
+                expires_in = token_json.get("expires_in", 3600)
+
+                token_expiry = datetime.utcnow() + timedelta(
+                    seconds=expires_in
+)
+
                 if not access_token:
                     raise HTTPException(status_code=400, detail="Failed to retrieve access token from Microsoft")
                     
@@ -112,6 +127,49 @@ async def outlook_login(
                 user.microsoft_id = microsoft_id
                 db.commit()
                 db.refresh(user)
+
+        oauth = (
+            db.query(OAuthAccount)
+            .filter(
+                OAuthAccount.user_id == user.id,
+                OAuthAccount.provider == "outlook"
+            )
+            .first()
+        )
+
+        if oauth is None:
+
+            oauth = OAuthAccount(
+
+                user_id=user.id,
+
+                provider="outlook",
+
+                provider_email=email,
+
+                provider_user_id=microsoft_id,
+
+                access_token=access_token,
+
+                refresh_token=refresh_token,
+
+                token_expiry=token_expiry
+
+            )
+
+            db.add(oauth)
+
+        else:
+
+            oauth.access_token = access_token
+
+            oauth.refresh_token = refresh_token
+
+            oauth.token_expiry = token_expiry
+
+            oauth.provider_email = email
+
+        db.commit()
                 
         # Generate session
         session_id = str(uuid.uuid4())

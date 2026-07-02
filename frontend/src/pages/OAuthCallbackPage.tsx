@@ -42,16 +42,38 @@ export default function OAuthCallbackPage() {
         const data = response.data;
         
         if (data.success) {
-          localStorage.setItem("session_id", data.session_id);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          
+
+          localStorage.setItem(
+            "session_id",
+            data.session_id
+          );
+
+          const user = {
+
+            ...data.user,
+
+            provider: provider
+
+          };
+
+          localStorage.setItem(
+            "user",
+            JSON.stringify(user)
+          );
+
           sessionStorage.removeItem("signup_fullName");
           sessionStorage.removeItem("signup_email");
           sessionStorage.removeItem("signup_password");
           sessionStorage.removeItem("signup_confirmPassword");
           sessionStorage.removeItem("signup_acceptedTerms");
-          
-          toast.success("Successfully logged in!", { id: "oauth-exchange" });
+
+          toast.success(
+            "Successfully logged in!",
+            {
+              id: "oauth-exchange"
+            }
+          );
+
           navigate("/dashboard");
         } else {
           toast.error(data.error || "Authentication failed.", { id: "oauth-exchange" });
