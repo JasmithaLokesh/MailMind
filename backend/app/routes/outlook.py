@@ -94,6 +94,8 @@ def sync_outlook(
 
             pass
 
+        category = "PRIMARY"
+
         existing = (
             db.query(Email)
             .filter(
@@ -103,66 +105,56 @@ def sync_outlook(
         )
 
         if existing:
+
             print("Already exists:", message["id"])
-            continue
 
-        category = "PRIMARY"
+            if existing.ai_processed:
 
-        db_email = Email(
+                continue
 
-            user_id=session.user_id,
+            db_email = existing
 
-            gmail_id=message["id"],
+        else:
 
-            thread_id=message.get(
-                "conversationId"
-            ),
+            db_email = Email(
 
-            sender=sender,
+                user_id=session.user_id,
 
-            subject=subject,
+                gmail_id=message["id"],
 
-            body=body,
+                thread_id=message.get("conversationId"),
 
-            received_at=received,
+                sender=sender,
 
-            category=category,
+                subject=subject,
 
-            is_read=message.get(
-                "isRead",
-                False
-            ),
+                body=body,
 
-            is_starred=False,
+                received_at=received,
 
-            priority_score=None,
+                category=category,
 
-            summary=None,
+                is_read=message.get("isRead", False),
 
-            action_items=None
+                is_starred=False,
 
-        )
+                priority_score=None,
 
-        db.add(db_email)
+                summary=None,
 
-        db.commit()
+                action_items=None
 
-        db.refresh(db_email)
+            )
 
-        print("Inserted into emails table")
+            db.add(db_email)
 
-        new_emails += 1
+            db.commit()
 
-        email_text = f"""
-        Subject:
-        {db_email.subject}
+            db.refresh(db_email)
 
-        From:
-        {db_email.sender}
+            print("Inserted into emails table")
 
-        Body:
-        {db_email.body}
-        """
+            new_emails += 1
 
         email_text = f"""
         Subject:
