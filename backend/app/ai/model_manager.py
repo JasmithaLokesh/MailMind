@@ -63,16 +63,32 @@ def get_spam():
     return _spam
 
 
+# def get_ner():
+#     global _ner
+
+#     if _ner is None:
+#         print("Loading NER...")
+#         _ner = pipeline(
+#             "ner",
+#             model="dslim/bert-base-NER",
+#             aggregation_strategy="simple"
+#         )
+#         print("NER loaded.")
+
+#     return _ner
+
 def get_ner():
     global _ner
 
     if _ner is None:
         print("Loading NER...")
+
         _ner = pipeline(
             "ner",
             model="dslim/bert-base-NER",
             aggregation_strategy="simple"
         )
+
         print("NER loaded.")
 
     return _ner

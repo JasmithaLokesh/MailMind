@@ -55,7 +55,16 @@ async def outlook_login(
                 token_json = token_response.json()
 
                 print("=" * 60)
-                print("TOKEN RESPONSE")
+                print("TOKEN RESPONSE STATUS:", token_response.status_code)
+                print("ACCESS TOKEN EXISTS:", "access_token" in token_json)
+
+                if "access_token" in token_json:
+                    token = token_json["access_token"]
+
+                    print("TOKEN PREFIX:", token[:40])
+                    print("TOKEN LENGTH:", len(token))
+                    print("NUMBER OF DOTS:", token.count("."))
+
                 print(token_json)
                 print("=" * 60)
                 

@@ -171,6 +171,12 @@ def sync_outlook(
 
             print("AI START")
 
+            print("=" * 80)
+            print("SUBJECT:", subject)
+            print("BODY LENGTH:", len(body))
+            print("WORDS:", len(body.split()))
+            print("=" * 80)
+
             result = analyze_email(
                 email_text
             )

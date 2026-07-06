@@ -23,7 +23,19 @@ def extract_entities(text: str):
     print("NER 2")
 
     # Limit text to avoid BERT token overflow
+    # safe_text = text[:500]
+
+    # entities = model(
+    #     safe_text,
+    #     truncation=True
+    # )
+
     safe_text = text[:500]
+
+    print("TEXT LENGTH:", len(safe_text))
+    print("TEXT START:")
+    print(safe_text[:300])
+    print("END OF TEXT")
 
     entities = model(
         safe_text,
