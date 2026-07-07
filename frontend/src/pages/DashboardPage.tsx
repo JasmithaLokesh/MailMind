@@ -134,7 +134,7 @@ export default function DashboardPage() {
 
       switch (user.provider) {
 
-        case "gmail":
+        case "google":
           endpoint = "/api/gmail/sync";
           break;
 
@@ -295,7 +295,7 @@ export default function DashboardPage() {
           <div className="relative z-10">
             <h2 className="text-3xl font-bold mb-2">MailMind Intelligence Hub</h2>
             <p className="font-medium opacity-90">
-              Priority emails, action items, deadlines and AI insights in one place.
+              Priority emails, deadlines and AI insights at one place.
             </p>
           </div>
           <div className="absolute top-0 right-0 -mt-10 -mr-10 opacity-20">

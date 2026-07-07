@@ -138,7 +138,7 @@ export default function SpamPage() {
                   onClick={() => navigate(`/emails/${email.id}`)}
                   className="p-5 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors flex flex-col md:flex-row gap-4"
                 >
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
                       <h3 className={`font-bold text-lg truncate ${!email.is_read ? 'text-[#009DD1]' : ''}`}>
                         {email.subject || "(No Subject)"}
@@ -155,12 +155,21 @@ export default function SpamPage() {
                     </p>
                   </div>
                   
-                  <div className="flex flex-col items-end justify-start gap-3 flex-shrink-0 pr-8 lg:pr-12">
+                  <div className="flex flex-col items-end justify-start gap-3 flex-shrink-0 pr-3 lg:pr-4">
                     <span className="text-sm text-slate-500 whitespace-nowrap">
                       {new Date(email.received_at).toLocaleDateString()}
                     </span>
                     {email.priority_score !== null && (
-                      <div className={`font-bold px-3 py-1 rounded-lg bg-slate-200 dark:bg-slate-900 ${getPriorityColor(email.priority_score)}`}>
+                      <div
+                        className={`inline-flex items-center justify-center
+                        whitespace-nowrap
+                        font-bold
+                        text-sm
+                        px-2.5 py-1
+                        rounded-lg
+                        bg-slate-200 dark:bg-slate-900
+                        ${getPriorityColor(email.priority_score)}`}
+                      >
                         {email.priority_score} Priority
                       </div>
                     )}

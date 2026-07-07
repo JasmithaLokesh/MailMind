@@ -68,6 +68,32 @@ function showAuthView() {
     document.getElementById("avatarWrapper").style.display = "block";
 }
 
+function showToast(message, type = "success") {
+
+    const toast = document.getElementById("toast");
+    const text = document.getElementById("toastMessage");
+    const icon = toast.querySelector(".toast-icon");
+
+    text.textContent = message;
+
+    if (type === "error") {
+
+        icon.style.background = "#EF4444";
+        icon.innerHTML = '<i class="fas fa-circle-xmark"></i>';
+
+    } else {
+
+        icon.style.background = "#7ED348";
+        icon.innerHTML = '<i class="fas fa-circle-check"></i>';
+    }
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
+
 // Tabs logic
 const tabs = document.querySelectorAll('.tab');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -171,6 +197,8 @@ loadStats();
 
 // Email Analysis
 const analyzeBtn = document.getElementById("analyzeBtn");
+const copyReplyBtn =
+    document.getElementById("copyReplyBtn");
 
 analyzeBtn.addEventListener("click", analyzeEmail);
 
@@ -182,8 +210,18 @@ async function analyzeEmail() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         
         // Verify it's Gmail
-        if (!tab.url.includes("mail.google.com")) {
-            alert("Please open an email in Gmail first.");
+        const isGmail =
+            tab.url.includes("mail.google.com");
+
+        const isOutlook =
+            tab.url.includes("outlook.live.com") ||
+            tab.url.includes("outlook.office.com");
+
+        if (!isGmail && !isOutlook) {
+            showToast(
+                "Please open an email in Gmail or Outlook first.",
+                "error"
+            );
             analyzeBtn.innerHTML = "✦ Analyze Current Email";
             return;
         }
@@ -191,17 +229,37 @@ async function analyzeEmail() {
         // Execute content script to get email body
         const injection = await chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            func: () => {
-                // Simplified DOM extraction for Gmail body
-                const emailBody = document.querySelector('.a3s.aiL');
-                return emailBody ? emailBody.innerText : null;
+            args: [isGmail],
+            func: (isGmail) => {
+
+                if (isGmail) {
+
+                    const emailBody =
+                        document.querySelector(".a3s.aiL");
+
+                    return emailBody
+                        ? emailBody.innerText
+                        : null;
+                }
+
+                // Outlook
+
+                const outlookBody =
+                    document.querySelector('[role="document"]');
+
+                return outlookBody
+                    ? outlookBody.innerText
+                    : null;
             }
         });
         
         const emailText = injection[0].result;
         
         if (!emailText) {
-            alert("Could not extract email content. Make sure an email is open.");
+            showToast(
+                "Open an email before analyzing.",
+                "error"
+            );
             analyzeBtn.innerHTML = "✦ Analyze Current Email";
             return;
         }
@@ -210,7 +268,10 @@ async function analyzeEmail() {
         
         const sessionId = await getSessionId();
         if (!sessionId) {
-            alert("Please login to MailMind Dashboard in another tab first.");
+            showToast(
+                "Please login to MailMind first.",
+                "error"
+            );
             analyzeBtn.innerHTML = "✦ Analyze Current Email";
             return;
         }
@@ -230,7 +291,10 @@ async function analyzeEmail() {
 
     } catch(error) {
         console.error(error);
-        alert("Analysis failed. Is the backend running?");
+        showToast(
+            "Analysis failed. Backend unavailable.",
+            "error"
+        );
     } finally {
         analyzeBtn.innerHTML = "✦ Analyze Current Email";
     }
@@ -240,16 +304,21 @@ function updateAnalysisUI(data) {
     document.getElementById("analysisResults").style.display = "block";
     
     document.getElementById("priorityText").textContent =
-        data.priority >= 75 ? "High Priority" : data.priority >= 50 ? "Medium Priority" : "Low Priority";
-        
-    document.getElementById("categoryText").textContent = data.category;
+        (data.priority_score ?? data.priority) >= 75
+            ? "High Priority"
+            : (data.priority_score ?? data.priority) >= 50
+                ? "Medium Priority"
+                : "Low Priority";
+
+    document.getElementById("categoryText").textContent =
+        data.classification ?? data.category;
     document.getElementById("summaryText").textContent = data.summary;
     document.getElementById("replyText").textContent = data.suggested_reply;
 
     const actionsList = document.getElementById("actionsList");
     actionsList.innerHTML = "";
-    if (data.actions && data.actions.length > 0) {
-        data.actions.forEach(action => {
+    if (data.action_items && data.action_items.length > 0) {
+        data.action_items.forEach(action => {
             const li = document.createElement("li");
             li.textContent = action;
             actionsList.appendChild(li);
@@ -258,3 +327,66 @@ function updateAnalysisUI(data) {
         actionsList.innerHTML = "<li>No specific actions needed</li>";
     }
 }
+
+// Copy Suggested Reply
+
+copyReplyBtn.addEventListener("click", async () => {
+
+    try {
+
+        const reply =
+            document.getElementById("replyText").innerText.trim();
+
+        if (!reply) {
+
+            alert("No reply available to copy.");
+
+            return;
+        }
+
+        try {
+
+            await navigator.clipboard.writeText(reply);
+
+        }
+        catch {
+
+            const textarea = document.createElement("textarea");
+
+            textarea.value = reply;
+
+            document.body.appendChild(textarea);
+
+            textarea.select();
+
+            document.execCommand("copy");
+
+            document.body.removeChild(textarea);
+
+        }
+
+        copyReplyBtn.classList.add("copied");
+
+        copyReplyBtn.innerHTML =
+        '<i class="fas fa-check"></i> Copied!';
+
+        setTimeout(() => {
+
+            copyReplyBtn.classList.remove("copied");
+
+            copyReplyBtn.innerHTML =
+            '<i class="fas fa-copy"></i> Copy Reply';
+
+        }, 2000);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+
+    }
+
+});

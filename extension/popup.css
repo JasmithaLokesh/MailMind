@@ -303,30 +303,46 @@ body {
 
     width: 100%;
 
-    padding: 14px;
-
     border: none;
 
-    border-radius: 14px;
+    border-radius: 12px;
+
+    padding: 12px;
+
+    margin-top: 12px;
+
+    cursor: pointer;
 
     background: #009DD1;
 
     color: white;
 
-    font-size: 15px;
-
     font-weight: 600;
 
-    cursor: pointer;
+    font-size: 16px;
 
-    transition: all 0.3s ease;
+    transition:
+        background 0.3s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .copy-btn:hover {
 
     background: #0087B5;
 
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 16px rgba(0,157,209,.25);
+}
+
+.copy-btn.copied {
+
+    background: #22C55E;
+
+    transform: scale(1.03);
+
+    box-shadow: 0 8px 18px rgba(34,197,94,.35);
 }
 
 .footer {
@@ -574,27 +590,6 @@ body {
     );
 }
 
-.copy-btn {
-
-    width: 100%;
-
-    border: none;
-
-    border-radius: 12px;
-
-    padding: 12px;
-
-    margin-top: 12px;
-
-    cursor: pointer;
-
-    background:#009DD1;
-
-    color: white;
-
-    font-weight: 600;
-}
-
 .features-bar {
 
     display: flex;
@@ -810,4 +805,71 @@ body.dark .profile-menu {
 body.dark #extLogout:hover {
     background: #FF4D4F !important;
     color: white !important;
+}
+
+.toast {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+
+    width: 340px;
+
+    background: var(--card);
+    color: var(--text);
+
+    border: 1px solid var(--primary);
+    border-radius: 16px;
+
+    padding: 18px 20px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    box-shadow: 0 12px 30px rgba(0,0,0,.18);
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: all .35s ease;
+    z-index: 99999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background: #7ED348;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 20px;
+
+    flex-shrink: 0;
+}
+
+.toast-text {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.35;
+}
+
+body.dark .toast {
+    box-shadow: 0 12px 30px rgba(0,0,0,.45);
+}
+
+body:not(.dark) .toast {
+    box-shadow: 0 12px 25px rgba(15,23,42,.15);
 }

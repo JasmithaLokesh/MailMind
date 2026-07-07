@@ -122,7 +122,7 @@
         <div class="hero-card" style="margin-top:0;">
             <button id="analyzeBtn">
                 ✦ Analyze Current Email
-                <span>Extracts and analyzes email open in Gmail</span>
+                <span>Extracts and analyzes email open in Inbox</span>
             </button>
         </div>
 
@@ -151,10 +151,22 @@
             <div class="reply-card">
                 <h3>✉️ Suggested Reply</h3>
                 <p id="replyText"></p>
-                <button class="copy-btn">📋 Copy Reply</button>
+                <button id="copyReplyBtn" class="copy-btn">
+                    📋 Copy Reply
+                </button>
             </div>
         </div>
    </div>
+
+   <div id="toast" class="toast">
+        <div class="toast-icon">
+            <i class="fas fa-circle-check"></i>
+        </div>
+
+        <div class="toast-text" id="toastMessage">
+            Message
+        </div>
+    </div>
 
    <div class="features-bar">
        <div>✦ <span>Smart Analysis</span></div>
@@ -164,7 +176,7 @@
    </div>
 
    <div class="footer">
-       MailMind AI Copilot v1.0
+       MailMind AI Copilot
    </div>
 
    <script src="popup.js"></script>
