@@ -175,21 +175,146 @@ async function loadStats() {
 }
 
 // Sync Button
-document.getElementById('syncBtn').addEventListener('click', async () => {
-    const btn = document.getElementById('syncBtn');
-    btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Syncing...`;
-    
-    // Simulate sync or tell backend to sync
-    const success = await loadStats();
-    
-    if (success) {
-        btn.innerHTML = `<i class="fas fa-check"></i> Synced`;
-    } else {
-        btn.innerHTML = `<i class="fas fa-times"></i> Failed`;
+document.getElementById("syncBtn").addEventListener("click", async () => {
+
+    const btn = document.getElementById("syncBtn");
+
+    btn.innerHTML =
+        `<i class="fas fa-spinner fa-spin"></i> Syncing...`;
+
+    btn.disabled = true;
+
+    try {
+
+        const sessionId = await getSessionId();
+
+        if (!sessionId) {
+
+            showToast(
+                "Please login to MailMind first.",
+                "error"
+            );
+
+            return;
+        }
+
+        // Get logged in user
+        const user = await new Promise((resolve) => {
+
+            chrome.tabs.query({}, (tabs) => {
+
+                const dashboardTab =
+                    tabs.find(
+                        t => t.url &&
+                        t.url.includes("localhost:5173")
+                    );
+
+                chrome.scripting.executeScript({
+
+                    target: {
+                        tabId: dashboardTab.id
+                    },
+
+                    func: () =>
+                        JSON.parse(
+                            localStorage.getItem("user")
+                        )
+
+                }, (results) => {
+
+                    resolve(results[0].result);
+
+                });
+
+            });
+
+        });
+
+        let endpoint = "";
+
+        switch (user.provider) {
+
+            case "google":
+                endpoint =
+                    "http://localhost:8000/api/gmail/sync";
+                break;
+
+            case "outlook":
+                endpoint =
+                    "http://localhost:8000/api/outlook/sync";
+                break;
+
+            case "yahoo":
+                endpoint =
+                    "http://localhost:8000/api/yahoo/sync";
+                break;
+
+            default:
+
+                showToast(
+                    "Unknown email provider",
+                    "error"
+                );
+
+                return;
+        }
+
+        const response =
+            await fetch(
+                `${endpoint}?session_id=${sessionId}`
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.detail || "Sync failed"
+            );
+
+        }
+
+        await loadStats();
+
+        if (data.new_emails_synced === 0) {
+
+            showToast(
+                "Inbox is already up to date!"
+            );
+
+        }
+
+        else {
+
+            showToast(
+                `${data.new_emails_synced} new email(s) synced`
+            );
+
+        }
+
     }
-    setTimeout(() => {
-        btn.innerHTML = `<i class="fas fa-sync-alt"></i> Sync Inbox`;
-    }, 2000);
+
+    catch (err) {
+
+        console.error(err);
+
+        showToast(
+            "Sync failed",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+            `<i class="fas fa-sync-alt"></i> Sync Inbox`;
+
+    }
+
 });
 
 // Load stats initially
