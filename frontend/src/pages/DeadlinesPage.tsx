@@ -116,9 +116,9 @@ export default function DeadlinesPage() {
                   <div 
                     key={email.id}
                     onClick={() => navigate(`/emails/${email.id}`)}
-                    className="p-6 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors flex flex-col md:flex-row gap-6 items-center"
+                    className="p-6 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-colors flex flefx-col lg:flex-row lg:items-center gap-6"
                   >
-                    <div className="flex-1 w-full">
+                    <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-xl mb-1 truncate">{email.subject || "(No Subject)"}</h3>
                       <p className="text-slate-500 dark:text-slate-400 mb-2">From: {email.sender}</p>
                       <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -126,7 +126,22 @@ export default function DeadlinesPage() {
                       </p>
                     </div>
                     
-                    <div className="flex flex-col items-center justify-center p-4 rounded-xl min-w-[200px] border dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+                    <div className="
+                      w-full
+                      lg:w-[250px]
+                      lg:flex-shrink-0
+                      flex
+                      flex-col
+                      items-center
+                      justify-center
+                      p-4
+                      rounded-xl
+                      border
+                      dark:border-slate-700
+                      bg-white
+                      dark:bg-slate-900
+                      shadow-sm
+                  ">
                       <div className="text-sm text-slate-500 font-semibold uppercase tracking-wider mb-2">
                         {new Date(email.deadline).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                       </div>
